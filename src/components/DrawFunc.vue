@@ -1,17 +1,48 @@
 <template>
-    <div class="row">
+    <div class="row mt-2">
         <div class="col-4">
-            <h4>Debug</h4>
-            <p>width : {{ width }}</p>
-            <p>height : {{ height }}</p>
-            <p>scale : {{ scale }}</p>
-            <p>originX : {{ originX }}</p>
-            <p>originY : {{ originY }}</p>
-            <p>zoomFactor : {{ zoomFactor }}</p>
-            <p>isTransitioning : {{ isTransitioning }}</p>
-            <p>transitionStartX : {{ transitionStartX }}</p>
-            <p>transitionStartY : {{ transitionStartY }}</p>
-            <button class="btn btn-primary" @click="resetCanvas">Réinitialiser</button>
+            <div class="row mb-3">
+                <div class="col">
+                    <h2>Fonctions mathématiques</h2>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-10">
+                    <input type="text" class="form-control"
+                        placeholder="Expression à dessiner" v-model="expression"
+                        @="resetCanvas"/>
+                </div>
+                <div class="col-2">
+                    <button class="btn btn-primary w-100" @click="resetCanvas">
+                        <i class="bi bi-arrow-clockwise"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <div class="card card-body">
+                        <button class="btn btn-primary" type="button"
+                            data-bs-toggle="collapse" data-bs-target="#debugPanel"
+                            aria-expanded="false" aria-controls="debugPanel"
+                        >
+                            Debug
+                        </button>
+                        <div class="collapse mt-2" id="debugPanel">
+                            <span>width : {{ width }}<br/></span>
+                            <span>height : {{ height }}<br/></span>
+                            <span>scale : {{ scale }}<br/></span>
+                            <span>originX : {{ originX }}<br/></span>
+                            <span>originY : {{ originY }}<br/></span>
+                            <span>zoomFactor : {{ zoomFactor }}<br/></span>
+                            <span>isTransitioning : {{ isTransitioning }}<br/></span>
+                            <span>transitionStartX : {{ transitionStartX }}<br/></span>
+                            <span>transitionStartY : {{ transitionStartY }}<br/></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+            </div>
         </div>
         <div class="col-8">
             <canvas 
@@ -31,11 +62,13 @@
 <script setup lang="ts">
     import { ref, onMounted } from 'vue';
     import { debounce } from 'lodash';
+    import { all, create, type EvalFunction } from 'mathjs';
 
     // Valeurs par défaut
     const DEFAULT_WIDTH = 800;
     const DEFAULT_HEIGHT = 450;
     const DEFAULT_SCALE = 20;
+    const ZOOM_FACTOR = 1.2;
 
     // Couleurs
     const AXIS_COLOR = '#CCC';
@@ -43,13 +76,15 @@
     const FUNC_COLOR = '#C22';
 
     // Initialise les réferences
+    const expression = ref('x^2');
+    const evalFunc = ref<EvalFunction>()
     const canvas = ref<HTMLCanvasElement | null>();
-    const width = ref(DEFAULT_WIDTH);
-    const height = ref(DEFAULT_HEIGHT);
-    const scale = ref(DEFAULT_SCALE);
-    const originX = ref(DEFAULT_WIDTH / 2);
-    const originY = ref(DEFAULT_HEIGHT / 2);
-    const zoomFactor = ref(1.2);
+    const width = ref(0);
+    const height = ref(0);
+    const scale = ref(0);
+    const originX = ref(0);
+    const originY = ref(0);
+    const zoomFactor = ref(ZOOM_FACTOR);
     const isTransitioning = ref(false);
     const transitionStartX = ref(0);
     const transitionStartY = ref(0);
@@ -67,12 +102,12 @@
 
     // Dessine la courbe de la fonction dans le canvas
     const drawFunction = (ctx: CanvasRenderingContext2D) => {
-        const func = (x: number) => Math.pow(x, 3); // Fonction a dessiner
         ctx.beginPath();
         ctx.strokeStyle = FUNC_COLOR;
         ctx.lineWidth = 2;
         for (let x = -originX.value; x < width.value - originX.value; x++) {
-            const y = func(x / scale.value) * scale.value;
+            // const y = func(x / scale.value) * scale.value;
+            const y = evalFunc.value?.evaluate({x: (x / scale.value)}) * scale.value;
             const canvasX = x + originX.value;
             const canvasY = originY.value - y; // Soustraire y car l'axe Y du canvas est inversé
             if (x === -originX.value) {
@@ -96,6 +131,7 @@
         }
     }, 10);
 
+    // Zoom ou dezoom sur le graphique
     const toZoom = (event: any) => {
         event.preventDefault();
         if (event.deltaY > 0) {
@@ -106,6 +142,7 @@
         drawCanvas();
     };
 
+    // Commence la transition du graphique
     const startTransition = (event: any) => {
         isTransitioning.value = true;
         transitionStartX.value = event.clientX;
@@ -115,6 +152,7 @@
         }
     };
     
+    // Effectue la transition du graphique
     const doTransition = (event: any) => {
         if (isTransitioning.value) {
             originX.value += event.clientX - transitionStartX.value;
@@ -125,31 +163,39 @@
         }
     };
 
+    // Termine la transition du graphique
     const endTransition = (event: any) => {
         isTransitioning.value = false;
         if (canvas.value) {
             canvas.value.style.cursor = 'grab';
         }
     };
+
+    // Evalue l'expression
+    const evaluateExpression = () => {
+        const math = create(all)
+        evalFunc.value = math.compile(expression.value);
+    }
     
+    // Reinitialise le graphique
     const resetCanvas = () => {
         width.value = DEFAULT_WIDTH;
         height.value = DEFAULT_HEIGHT;
         scale.value = DEFAULT_SCALE;
-        originX.value = DEFAULT_WIDTH / 2;
-        originY.value = DEFAULT_HEIGHT / 2;
+        originX.value = width.value / 2;
+        originY.value = height.value / 2;
         transitionStartX.value = 0;
         transitionStartY.value = 0;
-        drawCanvas();
-    }
-
-    onMounted(() => {
         if (canvas.value) {
             canvas.value.width = width.value;
             canvas.value.height = height.value;
-            originX.value = width.value / 2;
-            originY.value = height.value / 2;
+            evaluateExpression();
             drawCanvas();
         }
+    }
+
+    // Au montage du module
+    onMounted(() => {
+        resetCanvas();
     });
 </script>
