@@ -2,7 +2,12 @@ import './assets/bootstrap-custom.scss'
 import 'bootstrap'
 import 'bootstrap-icons/font/bootstrap-icons.css'
 
-import { createApp } from 'vue'
+import { createApp, withDirectives } from 'vue'
 import App from './App.vue'
+import vTooltip from './directives/Tooltip'
 
-createApp(App).mount('#app')
+const app = createApp(App)
+
+app.directive('tooltip', vTooltip)
+
+app.mount('#app')
