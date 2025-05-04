@@ -4,10 +4,10 @@ import 'bootstrap-icons/font/bootstrap-icons.css'
 
 import { createApp, withDirectives } from 'vue'
 import App from './App.vue'
-import vTooltip from './directives/Tooltip'
+import vBootstrap from './directives/Bootstrap'
 
 const app = createApp(App)
 
-app.directive('tooltip', vTooltip)
+app.directive('bs', vBootstrap)
 
 app.mount('#app')
