@@ -13,12 +13,12 @@ export class MathFunc {
     
     private static* colorGen(): Generator<string> {
         while (true) {
-            yield "#F00"
-            yield "#0F0"
-            yield "#00F"
-            yield "#FF0"
-            yield "#0FF"
-            yield "#F0F"
+            yield "#FF0000"
+            yield "#00FF00"
+            yield "#0000FF"
+            yield "#FFFF00"
+            yield "#00FFFF"
+            yield "#FF00FF"
         }
     }
 
