@@ -87,9 +87,9 @@
     const DEFAULT_ZOOM_FACTOR = 2
 
     // Couleurs
-    const AXIS_COLOR = '#CCC'
-    const TEXT_COLOR = '#BBD'
-    const FUNC_COLOR = '#5B4'
+    const AXIS_COLOR = '#CCF'
+    const TEXT_COLOR = '#BBE'
+    const FUNC_COLOR = '#F00'
     
     // Initialise les réferences
     const graph = ref<HTMLCanvasElement | null>(null)
@@ -142,25 +142,38 @@
     // Dessine les axes x et y dans le canvas
     const drawAxis = (ctx: CanvasRenderingContext2D) => {
         const toStrWith2digitsMax = (value: number):string => {
-            return String(Math.round((value + Number.EPSILON) * 100) / 100)
+            return String(Math.round(value + Number.EPSILON) / 100)
         }
         time('start drawAxis')
         ctx.strokeStyle = AXIS_COLOR
-        ctx.lineWidth = 2
         ctx.fillStyle = TEXT_COLOR
         ctx.font = '10px Arial'
-        ctx.beginPath()
         // Axe X
+        ctx.lineWidth = 2
+        ctx.beginPath()
         ctx.moveTo(0, originY.value)
         ctx.lineTo(width.value, originY.value)
+        ctx.stroke()
+        // X positif
         for (let i = originX.value; i < width.value; i += scaleX.value) {
+            ctx.lineWidth = 1
+            ctx.beginPath()
+            ctx.moveTo(i, 0)
+            ctx.lineTo(i, height.value)
+            ctx.stroke()
             ctx.fillText(
                 toStrWith2digitsMax(i - originX.value),
                 i,
                 originY.value + 10
             )
         }
+        // X négatif
         for (let i = originX.value; i > 0; i -= scaleX.value) {
+            ctx.lineWidth = 1
+            ctx.beginPath()
+            ctx.moveTo(i, 0)
+            ctx.lineTo(i, height.value)
+            ctx.stroke()
             ctx.fillText(
                 toStrWith2digitsMax(i - originX.value),
                 i,
@@ -168,16 +181,31 @@
             )
         }
         // Axe Y
+        ctx.lineWidth = 2
+        ctx.beginPath()
         ctx.moveTo(originX.value, 0)
         ctx.lineTo(originX.value, height.value)
+        ctx.stroke()
+        // Y négatif (inversé)
         for (let i = originY.value; i < height.value; i += scaleY.value) {
+            ctx.lineWidth = 1
+            ctx.beginPath()
+            ctx.moveTo(0, i)
+            ctx.lineTo(width.value, i)
+            ctx.stroke()
             ctx.fillText(
                 toStrWith2digitsMax(-(i - originY.value)),
                 originX.value + 10,
                 i
             )
         }
+        // Y positif (inversé)
         for (let i = originY.value; i > 0; i -= scaleY.value) {
+            ctx.lineWidth = 1
+            ctx.beginPath()
+            ctx.moveTo(0, i)
+            ctx.lineTo(width.value, i)
+            ctx.stroke()
             ctx.fillText(
                 toStrWith2digitsMax(-(i - originY.value)),
                 originX.value + 10,
