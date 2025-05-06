@@ -4,9 +4,9 @@
             <!-- Graphique -->
             <canvas 
                 class="border border-primary rounded w-100 h-100"
-                ref="graph"
+                ref="graphic"
                 style="cursor: grab;"
-                @wheel="doZoom"
+                @wheel.prevent="doZoom"
                 @mousedown="startTransition"
                 @mousemove="doTransition"
                 @mouseup="endTransition"
@@ -19,26 +19,28 @@
                 <i class="bi bi-crosshair"></i>
             </button>
             <!-- Bouton de sélection de la résolution -->
-            <div class="dropup position-absolute bottom-0 end-0 mb-2 me-2"
-                v-bs:tooltip="{title: 'Changer la résolution', placement: 'left'}">
+            <GraphicResolution :actual-resolution="height" @change-resolution="changeResolution"/>
+            <!-- Boutons de changement d'échelle -->
+            <div class="dropup position-absolute top-0 start-0 mt-2 ms-2">
                 <button type="button" class="btn btn-outline-primary"
-                    data-bs-toggle="dropdown" aria-expanded="false">
-                    <i class="bi bi-stars"></i>
+                    data-bs-toggle="collapse" data-bs-target="#scalingSettings">
+                    <i class="bi bi-rulers" />
                 </button>
-                <ul class="dropdown-menu">
-                    <li v-for="(resolution, index) in resolutions" :key="index">
-                        <button class="dropdown-item" @click="changeResolution" :value="index">
-                            {{resolution}}p<i class="bi bi-check" v-if="resolution == height"></i>
-                        </button>
-                    </li>
-                </ul>
+                <div class="collapse" id="scalingSettings">
+                    <div class="card card-body mt-2 border border-primary">
+                        
+                    </div>
+                </div>
             </div>
         </div>
     </div>
     <!-- Informations  -->
-    <div class="row">
-        <div class="col">
-            <p class="text-muted fs-6">Graphique généré en {{ timeToDraw }}  ms.</p>
+    <div class="row text-muted" style="font-size: 0.8rem;">
+        <div class="col-6">
+            <p>Nombre d'opérations : {{ nbOperations }}</p>
+        </div>
+        <div class="col-6 text-end">
+            <p>Graphique généré en {{ timeToDraw }}  ms.</p>
         </div>
     </div>
     <div class="row">
@@ -67,9 +69,9 @@
 
 <script setup lang="ts">
 
-    import { ref, onMounted, watch, watchEffect } from 'vue'
-    import { debounce } from 'lodash'
-    import { MathFunc } from './MathFunc'
+    import { ref, onMounted, watch } from 'vue'
+    import { MathFunc } from '../MathFunc'
+    import GraphicResolution from './GraphicResolution.vue'
 
     // Propriétés
     const props = defineProps({
@@ -83,7 +85,7 @@
     const DEFAULT_HEIGHT = 480
     const DEFAULT_WIDTH = DEFAULT_HEIGHT * (16/10)
     const DEFAULT_SCALE = 100
-    const DEFAULT_PRECISION = 10
+    const DEFAULT_PRECISION = 1
     const DEFAULT_ZOOM_FACTOR = 2
 
     // Couleurs
@@ -92,7 +94,7 @@
     const FUNC_COLOR = '#F00'
     
     // Initialise les réferences
-    const graph = ref<HTMLCanvasElement | null>(null)
+    const graphic = ref<HTMLCanvasElement | null>(null)
     const width = ref(DEFAULT_WIDTH)
     const height = ref(DEFAULT_HEIGHT)
     const scaleX = ref(DEFAULT_SCALE)
@@ -105,9 +107,9 @@
     const isTransitioning = ref(false)
     const transitionStartX = ref(0)
     const transitionStartY = ref(0)
-
-    const resolutions = ref([144, 240, 360, 480, 720, 1080])
-
+    
+    
+    const nbOperations = ref(0)
     const startTime = ref<Date|null>(null)
     const timeToDraw = ref(0)
 
@@ -124,11 +126,11 @@
     // Initialise les valeurs du canvas
     const initCanvas = () => {
         time('start initCanvas')
-        if (graph.value) {
-            const parentWidth = (graph.value.parentNode as HTMLElement)?.offsetWidth
+        if (graphic.value) {
+            const parentWidth = (graphic.value.parentNode as HTMLElement)?.offsetWidth
             widthRatio.value = parentWidth / width.value
-            graph.value.width = width.value
-            graph.value.height = height.value
+            graphic.value.width = width.value
+            graphic.value.height = height.value
             originX.value = width.value / 2
             originY.value = height.value / 2
             scaleX.value = DEFAULT_SCALE
@@ -222,9 +224,11 @@
         ctx.lineWidth = 3
         props.functions?.forEach((func: any) => {
             ctx.strokeStyle = func.color ?? FUNC_COLOR
+            console.log(func.getVariables())
             ctx.beginPath()
             for (let x = -originX.value; x < width.value - originX.value; x+=precision.value) {
                 const y = func.evaluate({x: (x / scaleX.value)}) * scaleY.value
+                ++nbOperations.value
                 const canvasX = x + originX.value
                 const canvasY = originY.value - y // Soustraire y car l'axe Y du canvas est inversé
                 if (x === -originX.value) {
@@ -239,11 +243,12 @@
     };
 
     // Efface le canvas puis dessine les axes et la courbe
-    const drawGraph = debounce(function () {
+    const drawGraph = () => {
         time('start drawGraph')
-        if (graph.value) {
+        if (graphic.value) {
             const t = new Date()
-            const context = graph.value.getContext('2d')
+            nbOperations.value = 0
+            const context = graphic.value.getContext('2d')
             if (context) {
                 context.clearRect(0, 0, width.value, height.value)
                 drawAxis(context)
@@ -252,11 +257,10 @@
             timeToDraw.value = new Date().getTime() - t.getTime()
         }
         time('end drawGraph')
-    }, 10);
+    }
 
     // Zoom ou dezoom sur le graphique
     const doZoom = (event: any) => {
-        event.preventDefault()
         if (event.deltaY > 0) {
             scaleX.value /= zoomFactor.value
             scaleY.value /= zoomFactor.value
@@ -272,8 +276,8 @@
         isTransitioning.value = true
         transitionStartX.value = event.clientX
         transitionStartY.value = event.clientY
-        if (graph.value) {
-            graph.value.style.cursor = 'grabbing'
+        if (graphic.value) {
+            graphic.value.style.cursor = 'grabbing'
         }
     };
     
@@ -292,8 +296,8 @@
     // Termine la transition du graphique
     const endTransition = (event: any) => {
         isTransitioning.value = false
-        if (graph.value) {
-            graph.value.style.cursor = 'grab'
+        if (graphic.value) {
+            graphic.value.style.cursor = 'grab'
         }
     };
     
@@ -304,8 +308,8 @@
         drawGraph()
     }
 
-    const changeResolution =  (event: any) => {
-        height.value = resolutions.value[event.target.value]
+    const changeResolution =  (resolution: number) => {
+        height.value = resolution
         width.value = height.value * (16/10)
         resetGraph()
     }
@@ -319,7 +323,6 @@
 
     // Au changement des fonctions
     watch(() => props.functions, (newVal, oldVal) => {
-        console.log('WATCHHH')
         resetGraph()
     }, { deep: true });
 

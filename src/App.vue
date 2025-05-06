@@ -3,7 +3,7 @@
     <div class="container">
         <div class="row">
             <div class="col">
-                <FuncDrawer />
+                <MathFunction />
             </div>
         </div>
     </div>
@@ -11,5 +11,5 @@
 
 <script setup lang="ts">
     import Navbar from './components/Navbar.vue'
-    import FuncDrawer from './components/MathFunctionModule/FuncDrawer.vue'
+    import MathFunction from './components/MathFunctionModule/MathFunction.vue'
 </script>

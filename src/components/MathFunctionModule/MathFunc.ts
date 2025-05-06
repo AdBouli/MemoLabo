@@ -13,12 +13,10 @@ export class MathFunc {
     
     private static* colorGen(): Generator<string> {
         while (true) {
-            yield "#FF0000"
-            yield "#00FF00"
-            yield "#0000FF"
-            yield "#FFFF00"
-            yield "#00FFFF"
-            yield "#FF00FF"
+            yield "#FF8B7D"
+            yield "#7DB3FF"
+            yield "#FFB37D"
+            yield "#7DF8FF"
         }
     }
 
@@ -49,6 +47,16 @@ export class MathFunc {
 
     evaluate(scope: any): number {
         return this.function.evaluate(scope)
+    }
+
+    getVariables(): string[] {
+        const variables: string[] = []
+        const nodes = MathFunc.math.parse(this.expression).filter((node: any) => {
+            if (node.isSymbolNode) {
+                variables.push(node.name)
+            }
+        })
+        return variables
     }
 
 }

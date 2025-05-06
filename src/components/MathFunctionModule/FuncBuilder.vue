@@ -3,20 +3,20 @@
     <div class="col">
         <div class="input-group">
             <!-- Id span -->
-            <span class="input-group-text text-primary border border-primary rounded-start ps-2 pe-1">
+            <span class="input-group-text text-dark border border-primary rounded-start ps-2 pe-1" :style="{backgroundColor: `${func.color}80` }">
                 <strong><em>f(x)</em></strong>
             </span>
             <!-- Input expression -->
             <input type="text" class="form-control border border-primary w-50"
                 v-model="func.expression" @keyup="func.compile()" />
             <!-- Input couleur -->
-            <button class="btn btn-outline-primary" @click="openColorPicker">
-                <i class="bi bi-palette-fill" :style="{ color: func.color }"></i>
+            <button class="btn btn-outline-primary text-dark" @click="openColorPicker"  :style="{backgroundColor: `${func.color}80` }">
+                <i class="bi bi-palette-fill"></i>
                 <input type="color" style="opacity: 0; position: absolute; pointer-events: none; width: 0; height: 0;"
                     ref="colorPicker" v-model="func.color">
             </button>
             <!-- Bouton suppression -->
-            <button class="btn btn-outline-primary" @click="$emit('delete', func)">
+            <button class="btn btn-outline-primary text-dark" @click="$emit('delete', func)"  :style="{backgroundColor: `${func.color}80` }">
                 <i class="bi bi-trash-fill"></i>
             </button>
         </div>

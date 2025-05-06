@@ -8,12 +8,12 @@
     <!-- Content -->
     <div class="row mt-2">
         <!-- Fonctions -->
-        <div class="col-4">
+        <div class="col-4 text-end">
             <div v-for="(fx, index) in functions" :key="index">
                 <FuncBuilder v-model="functions[index]" @delete="(f) => functions.splice(functions.indexOf(f), 1)" />
             </div>
             <!-- Bouton d'ajout -->
-            <button class="btn btn-primary" @click="functions.push(MathFunc.create())"> 
+            <button class="btn btn-primary mt-2" @click="functions.push(MathFunc.create())"> 
                 <i class="bi bi-plus-circle"></i>
                 Ajouter une fonction
             </button>
@@ -28,7 +28,7 @@
 <script setup lang="ts">
     import { ref, onMounted } from 'vue'
     import FuncBuilder from './FuncBuilder.vue'
-    import Graphic from './Graphic.vue'
+    import Graphic from './Graphic/Graphic.vue'
     import { MathFunc } from './MathFunc'
 
     // Initialise les réferences
