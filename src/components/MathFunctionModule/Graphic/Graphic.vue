@@ -139,7 +139,7 @@
         time('start drawAxis')
         ctx.strokeStyle = AXIS_COLOR
         ctx.fillStyle = TEXT_COLOR
-        ctx.font = '10px Arial'
+        ctx.font = '12px Arial'
         // Axe X
         ctx.lineWidth = 2
         ctx.beginPath()
@@ -155,8 +155,8 @@
             ctx.stroke()
             ctx.fillText(
                 toStrWith2digitsMax((i - originX.value)/scaleX.value),
-                i,
-                originY.value + 10
+                i+5,
+                originY.value + 15
             )
         }
         // X négatif
@@ -168,8 +168,8 @@
             ctx.stroke()
             ctx.fillText(
                 toStrWith2digitsMax((i - originX.value)/scaleX.value),
-                i,
-                originY.value + 10
+                i+5,
+                originY.value + 15
             )
         }
         // Axe Y
@@ -187,8 +187,8 @@
             ctx.stroke()
             ctx.fillText(
                 toStrWith2digitsMax(-(i - originY.value)/scaleY.value),
-                originX.value + 10,
-                i
+                originX.value + 15,
+                i+5
             )
         }
         // Y positif (inversé)
@@ -200,8 +200,8 @@
             ctx.stroke()
             ctx.fillText(
                 toStrWith2digitsMax(-(i - originY.value)/scaleY.value),
-                originX.value + 10,
-                i
+                originX.value + 15,
+                i+5
             )
         }
         ctx.stroke()
