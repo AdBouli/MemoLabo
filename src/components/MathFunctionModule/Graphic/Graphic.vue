@@ -37,10 +37,10 @@
     <!-- Informations  -->
     <div class="row text-muted" style="font-size: 0.8rem;">
         <div class="col-6">
-            <p>Nombre d'opérations : {{ nbOperations }}</p>
+            <p>Graphique généré en {{ timeToDraw }}  ms.</p>
         </div>
         <div class="col-6 text-end">
-            <p>Graphique généré en {{ timeToDraw }}  ms.</p>
+            <p>Nombre d'opérations : {{ nbOperations }}</p>
         </div>
     </div>
     <div class="row text-muted text-center" style="font-size: 0.8rem;">
@@ -99,23 +99,12 @@
     const transitionStartY = ref(0)
     
     
-    const nbOperations = ref(0)
-    const startTime = ref<Date|null>(null)
     const timeToDraw = ref(0)
+    const nbOperations = ref(0)
 
-    const resetTime = () => {
-        startTime.value = new Date()
-    }
-
-    const time = (label: string) => {
-        if (startTime.value) {
-            console.log(label, new Date().getTime() - startTime.value.getTime(), 'ms')
-        }
-    }
 
     // Initialise les valeurs du canvas
     const initCanvas = () => {
-        time('start initCanvas')
         if (graphic.value) {
             const parentWidth = (graphic.value.parentNode as HTMLElement)?.offsetWidth
             widthRatio.value = parentWidth / width.value
@@ -128,7 +117,6 @@
             transitionStartX.value = 0
             transitionStartY.value = 0
         }
-        time('end initCanvas')
     }
 
     // Dessine les axes x et y et le quadrillage dans le canvas
@@ -136,7 +124,6 @@
         const toStrWith2digitsMax = (value: number):string => {
             return String(Math.round(value + Number.EPSILON))
         }
-        time('start drawAxis')
         ctx.strokeStyle = AXIS_COLOR
         ctx.fillStyle = TEXT_COLOR
         ctx.font = '12px Arial'
@@ -166,9 +153,10 @@
             ctx.moveTo(i, 0)
             ctx.lineTo(i, height.value)
             ctx.stroke()
+            const graduation = toStrWith2digitsMax((i - originX.value)/scaleX.value)
             ctx.fillText(
-                toStrWith2digitsMax((i - originX.value)/scaleX.value),
-                i+5,
+                graduation,
+                i-5*(graduation.length+1), // pour ne pas écrire sur l'axe
                 originY.value + 15
             )
         }
@@ -187,8 +175,8 @@
             ctx.stroke()
             ctx.fillText(
                 toStrWith2digitsMax(-(i - originY.value)/scaleY.value),
-                originX.value + 15,
-                i+5
+                originX.value + 5,
+                i+15
             )
         }
         // Y positif (inversé)
@@ -200,19 +188,17 @@
             ctx.stroke()
             ctx.fillText(
                 toStrWith2digitsMax(-(i - originY.value)/scaleY.value),
-                originX.value + 15,
-                i+5
+                originX.value + 5,
+                i-5
             )
         }
         ctx.stroke()
-        time('end drawAxis')
     }
 
     // Dessine la courbe de la fonction dans le canvas
     const drawFunctions = (ctx: CanvasRenderingContext2D) => {
-        time('start drawFunctions')
         ctx.lineWidth = 3
-        props.functions?.forEach((func: any) => {
+        props.functions.forEach((func: any) => {
             ctx.strokeStyle = func.color ?? FUNC_COLOR
             console.log(func.getVariables())
             ctx.beginPath()
@@ -229,14 +215,12 @@
             }
             ctx.stroke();
         })
-        time('end drawFunctions')
     };
 
     // Efface le canvas puis dessine les axes et la courbe
     const drawGraph = () => {
-        time('start drawGraph')
         if (graphic.value) {
-            const t = new Date()
+            const startTime = new Date()
             nbOperations.value = 0
             const context = graphic.value.getContext('2d')
             if (context) {
@@ -244,9 +228,8 @@
                 drawAxis(context)
                 drawFunctions(context)
             }
-            timeToDraw.value = new Date().getTime() - t.getTime()
+            timeToDraw.value = new Date().getTime() - startTime.getTime()
         }
-        time('end drawGraph')
     }
 
     // Zoom ou dezoom sur le graphique
@@ -293,7 +276,6 @@
     
     // Reinitialise le graphique
     const resetGraph = () => {
-        resetTime()
         initCanvas()
         drawGraph()
     }
