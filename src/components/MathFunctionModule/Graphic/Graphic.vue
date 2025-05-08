@@ -134,7 +134,7 @@
     // Dessine les axes x et y et le quadrillage dans le canvas
     const drawAxis = (ctx: CanvasRenderingContext2D) => {
         const toStrWith2digitsMax = (value: number):string => {
-            return String(Math.round(value + Number.EPSILON) / 100)
+            return String(Math.round(value + Number.EPSILON))
         }
         time('start drawAxis')
         ctx.strokeStyle = AXIS_COLOR
@@ -154,7 +154,7 @@
             ctx.lineTo(i, height.value)
             ctx.stroke()
             ctx.fillText(
-                toStrWith2digitsMax(i - originX.value),
+                toStrWith2digitsMax((i - originX.value)/scaleX.value),
                 i,
                 originY.value + 10
             )
@@ -167,7 +167,7 @@
             ctx.lineTo(i, height.value)
             ctx.stroke()
             ctx.fillText(
-                toStrWith2digitsMax(i - originX.value),
+                toStrWith2digitsMax((i - originX.value)/scaleX.value),
                 i,
                 originY.value + 10
             )
@@ -186,7 +186,7 @@
             ctx.lineTo(width.value, i)
             ctx.stroke()
             ctx.fillText(
-                toStrWith2digitsMax(-(i - originY.value)),
+                toStrWith2digitsMax(-(i - originY.value)/scaleY.value),
                 originX.value + 10,
                 i
             )
@@ -199,7 +199,7 @@
             ctx.lineTo(width.value, i)
             ctx.stroke()
             ctx.fillText(
-                toStrWith2digitsMax(-(i - originY.value)),
+                toStrWith2digitsMax(-(i - originY.value)/scaleY.value),
                 originX.value + 10,
                 i
             )
