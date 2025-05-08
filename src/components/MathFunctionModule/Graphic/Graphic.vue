@@ -200,7 +200,6 @@
         ctx.lineWidth = 3
         props.functions.forEach((func: any) => {
             ctx.strokeStyle = func.color ?? FUNC_COLOR
-            console.log(func.getVariables())
             ctx.beginPath()
             for (let x = -originX.value; x < width.value - originX.value; x+=precision.value) {
                 const y = func.evaluate({x: (x / scaleX.value)}) * scaleY.value

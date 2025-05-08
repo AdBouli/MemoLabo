@@ -7,7 +7,7 @@
                 <strong><em>f(x)</em></strong>
             </span>
             <!-- Input expression -->
-            <input type="text" class="form-control border border-primary w-50"
+            <input type="text" class="form-control border border-primary w-50" :class="{ 'is-invalid': func.error }"
                 v-model="func.expression" @keyup="func.compile()" />
             <!-- Input couleur -->
             <button class="btn btn-outline-primary text-dark" @click="openColorPicker"  :style="{backgroundColor: `${func.color}80` }">
@@ -27,7 +27,7 @@
 
 <script setup lang="ts">
 
-import { onMounted, ref } from 'vue'
+import { ref } from 'vue'
 import { MathFunc } from './MathFunc'
 
 const colorPicker = ref<HTMLInputElement | null>(null)
