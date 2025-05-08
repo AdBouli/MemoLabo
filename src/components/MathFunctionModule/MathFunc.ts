@@ -73,7 +73,7 @@ export class MathFunc {
     getVariables(): string[] {
         const variables: string[] = []
         MathFunc.math.parse(this.expression).filter((node: any) => {
-            if (node.isSymbolNode) {
+            if (node.isSymbolNode && node.name !== 'x') {
                 variables.push(node.name)
             }
         })

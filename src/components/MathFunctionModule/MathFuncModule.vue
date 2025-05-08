@@ -1,38 +1,61 @@
 <template>
-    <!-- Title -->
+    <!-- Titre -->
     <div class="row mt-2">
         <div class="col">
             <h2>Fonctions mathématiques</h2>
         </div>
     </div>
-    <!-- Content -->
+    <!-- Contenu -->
     <div class="row mt-2">
-        <!-- Fonctions -->
-        <div class="col-4 text-end">
-            <div v-for="(fx, index) in functions" :key="index">
-                <FuncBuilder v-model="functions[index]" @delete="(f) => functions.splice(functions.indexOf(f), 1)" />
+        <div class="col-4 ">
+            <!-- Fonctions -->
+            <div class="row">
+                <div class="col">
+                    <div v-for="(func, index) in functions" :key="index">
+                        <MathFuncBuilder v-model="functions[index]" @delete="(f) => functions.splice(functions.indexOf(f), 1)" />
+                    </div>
+                </div>
             </div>
             <!-- Bouton d'ajout -->
-            <button class="btn btn-primary mt-2" @click="functions.push(MathFunc.create())"> 
-                <i class="bi bi-plus-circle"></i>
-                Ajouter une fonction
-            </button>
+            <div class="row">
+                <div class="col-6 offset-6">
+                    <button type="button" class="btn btn-primary" 
+                        @click="functions.push(MathFunc.create())"> 
+                        <i class="bi bi-plus-circle"></i>
+                        Ajouter une fonction
+                    </button>
+                </div>
+            </div>
+            <hr>
+            <!-- Variables -->
+            <div class="row">
+                <div class="col">
+                     <div v-for="(variable, index) in variables" :key="index">
+                        <MathVarBuilder v-model="variables[index]"/>
+                     </div>
+                </div>
+            </div>
         </div>
         <!-- Graphique -->
         <div class="col-8">
-            <Graphic :functions="functions"/>
+            <!-- <Graphic :functions="functions" :variables="variables"/> -->
+            <Graphic :functions="functions" :grid="showGrid"/>
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
-    import { ref, onMounted } from 'vue'
-    import FuncBuilder from './MathFuncBuilder.vue'
+    import { ref, onMounted, watch } from 'vue'
+    import MathFuncBuilder from './MathFuncBuilder.vue'
+    import MathVarBuilder from './MathVarBuilder.vue';
     import Graphic from './Graphic/Graphic.vue'
     import { MathFunc } from './MathFunc'
+    import { MathVar } from './MathVar'
 
     // Initialise les réferences
     const functions = ref<MathFunc[]>([MathFunc.create('x^2')]);
+    const variables = ref<{[key: string]: MathVar}>({});
+    const showGrid = ref(true);
 
     // Au montage du module
     onMounted(() => {
@@ -40,5 +63,21 @@
         functions.value.push(MathFunc.create('1.5x'))
         functions.value.push(MathFunc.create('-2x+0.3'))
     });
+
+    watch(functions, (newFunctions) => {
+        newFunctions.forEach((func) => {
+            func.getVariables().forEach((var_) => {
+                if (variables.value[var_] === undefined) {
+                    variables.value[var_] = new MathVar(var_, 0);
+                    // todo supprimer la variable si elle n'est plus utilisée
+                    //  Object.keys(variables.value).forEach((key) => {
+                    //     if (!newFunctions.some(func => func.getVariables().includes(key))) {
+                    //         delete variables.value[key];
+                    //     }
+                    // });
+                }
+            });
+        });
+    }, { deep: true });
 
 </script>
