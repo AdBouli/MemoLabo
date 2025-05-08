@@ -43,26 +43,15 @@
             <p>Graphique généré en {{ timeToDraw }}  ms.</p>
         </div>
     </div>
-    <div class="row">
+    <div class="row text-muted text-center" style="font-size: 0.8rem;">
         <div class="col-4">
-            <p class="text-muted fs-6">width : {{ width }}</p>
+            <p>width : {{ $fmtNum(width) }} ; height: {{ $fmtNum(height) }}</p>
         </div>
         <div class="col-4">
-            <p class="text-muted fs-6">x scale : {{ scaleX }}</p>
+            <p>scale : x: {{ $fmtNum(scaleX) }} ; y: {{ $fmtNum(scaleY) }}</p>
         </div>
         <div class="col-4">
-            <p class="text-muted fs-6">x origin : {{ originX }}</p>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-4">
-            <p class="text-muted fs-6">height : {{ height }}</p>
-        </div>
-        <div class="col-4">
-            <p class="text-muted fs-6">y scale : {{ scaleY }}</p>
-        </div>
-        <div class="col-4">
-            <p class="text-muted fs-6">y origin : {{ originY }}</p>
+            <p>origin : x: {{ $fmtNum(originX) }} ; y: {{ $fmtNum(originY) }}</p>
         </div>
     </div>
 </template>
@@ -82,8 +71,9 @@
     })
     
     // Valeurs par défaut
-    const DEFAULT_HEIGHT = 480
-    const DEFAULT_WIDTH = DEFAULT_HEIGHT * (16/10)
+    const DEFAULT_RATIO = 16 / 10
+    const DEFAULT_HEIGHT = 720
+    const DEFAULT_WIDTH = DEFAULT_HEIGHT * DEFAULT_RATIO
     const DEFAULT_SCALE = 100
     const DEFAULT_PRECISION = 1
     const DEFAULT_ZOOM_FACTOR = 2
@@ -141,7 +131,7 @@
         time('end initCanvas')
     }
 
-    // Dessine les axes x et y dans le canvas
+    // Dessine les axes x et y et le quadrillage dans le canvas
     const drawAxis = (ctx: CanvasRenderingContext2D) => {
         const toStrWith2digitsMax = (value: number):string => {
             return String(Math.round(value + Number.EPSILON) / 100)
@@ -310,7 +300,7 @@
 
     const changeResolution =  (resolution: number) => {
         height.value = resolution
-        width.value = height.value * (16/10)
+        width.value = height.value * DEFAULT_RATIO
         resetGraph()
     }
 

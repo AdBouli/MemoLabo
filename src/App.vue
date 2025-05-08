@@ -11,5 +11,5 @@
 
 <script setup lang="ts">
     import Navbar from './components/Navbar.vue'
-    import MathFunction from './components/MathFunctionModule/MathFunction.vue'
+    import MathFunction from './components/MathFunctionModule/MathFuncModule.vue'
 </script>

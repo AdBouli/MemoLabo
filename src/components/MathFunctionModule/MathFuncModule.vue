@@ -27,7 +27,7 @@
 
 <script setup lang="ts">
     import { ref, onMounted } from 'vue'
-    import FuncBuilder from './FuncBuilder.vue'
+    import FuncBuilder from './MathFuncBuilder.vue'
     import Graphic from './Graphic/Graphic.vue'
     import { MathFunc } from './MathFunc'
 
