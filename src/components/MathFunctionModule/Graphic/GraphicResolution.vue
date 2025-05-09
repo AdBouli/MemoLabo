@@ -32,11 +32,11 @@
         }
     })
 
-    const emit = defineEmits(['changeResolution'])
+    const emit = defineEmits(['setGraphic'])
 
     const changeResolution = (event: Event) => {
         const target = event.target as HTMLButtonElement;
-        emit('changeResolution', resolutions.value[parseInt(target.value)]);
+        emit('setGraphic', {height: resolutions.value[parseInt(target.value)]});
     }
     
 </script>

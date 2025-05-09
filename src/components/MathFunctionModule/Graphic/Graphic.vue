@@ -13,15 +13,8 @@
                 @mouseleave="endTransition"
             >
             </canvas>
-            <!-- Bouton reset -->
-            <button type="button" class="btn btn-outline-primary position-absolute top-0 end-0 mt-2 me-2"
-                v-bs:tooltip="{title: 'Réinitialiser le graphique', placement: 'left'}" @click="resetGraph">
-                <i class="bi bi-crosshair"></i>
-            </button>
-            <!-- Bouton de sélection de la résolution -->
-            <GraphicResolution :actual-resolution="height" @change-resolution="changeResolution"/>
             <!-- Boutons de changement d'échelle -->
-            <div class="dropup position-absolute top-0 start-0 mt-2 ms-2">
+            <div class="position-absolute top-0 start-0 mt-2 ms-2">
                 <button type="button" class="btn btn-outline-primary"
                     data-bs-toggle="collapse" data-bs-target="#scalingSettings">
                     <i class="bi bi-rulers" />
@@ -49,6 +42,22 @@
                     </div>
                 </div>
             </div>
+            <!-- Bouton de recentrage -->
+            <div class="position-absolute bottom-0 start-0 mb-2 ms-2">
+                <button type="button" class="btn btn-outline-primary"
+                    v-bs:tooltip="{title: 'Réinitialiser le graphique', placement: 'left'}" @click="resetGraph">
+                    <i class="bi bi-arrow-clockwise"></i> 
+                </button>
+            </div>
+            <!-- Bouton reset -->
+            <div class="position-absolute top-0 end-0 mt-2 me-2">
+                <button type="button" class="btn btn-outline-primary"
+                    v-bs:tooltip="{title: 'Recentrer le graphique', placement: 'left'}" @click="centerGraph">
+                    <i class="bi bi-crosshair"></i>
+                </button>
+            </div>
+            <!-- Bouton de sélection de la résolution -->
+            <GraphicResolution :actual-resolution="height" @set-graphic="setGraphic"/>
         </div>
     </div>
     <!-- Informations  -->
@@ -78,7 +87,7 @@
     import { ref, onMounted, watch, nextTick } from 'vue'
     import { MathFunc } from '../MathFunc'
     import GraphicResolution from './GraphicResolution.vue'
-import type { MathVar } from '../MathVar'
+    import type { MathVar } from '../MathVar'
 
     // Propriétés
     const props = defineProps({
@@ -120,25 +129,54 @@ import type { MathVar } from '../MathVar'
     const transitionStartX = ref<number>(0)
     const transitionStartY = ref<number>(0)
     const grid = ref<boolean>(true)
-    
-    
+        
     const timeToDraw = ref(0)
     const nbOperations = ref(0)
 
-
-    // Initialise les valeurs du canvas
-    const initCanvas = () => {
+    
+    // Paramètre le graphique
+    const setGraphic = (options: {
+        height?: number
+        scaleX?: number
+        scaleY?: number
+        precision?: number
+        grid?: boolean
+    }) => {
         if (graphic.value) {
-            const parentWidth = (graphic.value.parentNode as HTMLElement)?.offsetWidth
-            widthRatio.value = parentWidth / width.value
-            graphic.value.width = width.value
-            graphic.value.height = height.value
-            originX.value = width.value / 2
-            originY.value = height.value / 2
-            scaleX.value = DEFAULT_SCALE
-            scaleY.value = DEFAULT_SCALE
-            transitionStartX.value = 0
-            transitionStartY.value = 0
+            // height
+            if (options.height !== undefined) {
+                // Sauvegarde la taille actuelle
+                const oldWidth = width.value
+                const oldHeight = height.value
+                // Taille du graphique
+                height.value = options.height
+                width.value = height.value * DEFAULT_RATIO
+                widthRatio.value = (graphic.value.parentNode as HTMLElement)?.offsetWidth / width.value
+                // Redimensionne le canvas
+                graphic.value.width = width.value
+                graphic.value.height = height.value
+                // Repositionne au même endroit
+                originX.value = originX.value * width.value / oldWidth
+                originY.value = originY.value * height.value / oldHeight
+            }
+            // scaleX
+            if (options.scaleX !== undefined) {
+                scaleX.value = options.scaleX
+            }
+            // scaleY
+            if (options.scaleY !== undefined) {
+                scaleY.value = options.scaleY
+            }
+            // precision
+            if (options.precision !== undefined) {
+                precision.value = options.precision
+            }
+            // grid
+            if (options.grid !== undefined) {
+                grid.value = options.grid
+            }
+            // Dessine le graphique
+            drawGraph()
         }
     }
 
@@ -301,23 +339,32 @@ import type { MathVar } from '../MathVar'
             graphic.value.style.cursor = 'grab'
         }
     };
+
+    // Centre le graphique
+    const centerGraph = () => {
+        originX.value = width.value / 2
+        originY.value = height.value / 2
+        drawGraph()
+    }
     
     // Reinitialise le graphique
     const resetGraph = () => {
-        initCanvas()
+        setGraphic({
+            height: DEFAULT_HEIGHT,
+            scaleX: DEFAULT_SCALE,
+            scaleY: DEFAULT_SCALE,
+            precision: DEFAULT_PRECISION
+        })
+        scaleX.value = DEFAULT_SCALE
+        scaleY.value = DEFAULT_SCALE
+        precision.value = DEFAULT_PRECISION
+        centerGraph()
         drawGraph()
     }
 
-    const changeResolution =  (resolution: number) => {
-        height.value = resolution
-        width.value = height.value * DEFAULT_RATIO
-        resetGraph()
-    }
 
     // Au montage du module
     onMounted(() => {
-        width.value = DEFAULT_WIDTH
-        height.value = DEFAULT_HEIGHT
         resetGraph()
     });
 

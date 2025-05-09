@@ -18,7 +18,7 @@
             </div>
             <!-- Bouton d'ajout -->
             <div class="row">
-                <div class="col-6 offset-6">
+                <div class="col text-end">
                     <button type="button" class="btn btn-primary" 
                         @click="functions.push(MathFunc.create())"> 
                         <i class="bi bi-plus-circle"></i>
