@@ -252,9 +252,9 @@ const drawFunctions = (ctx: CanvasRenderingContext2D) => {
                 ctx.lineTo(canvasX, canvasY)
             }
         }
-        ctx.stroke();
+        ctx.stroke()
     })
-};
+}
 
 // Efface le canvas puis dessine les axes et la courbe
 const drawGraph = () => {
@@ -283,8 +283,8 @@ const doZoom = (event: any) => {
         scaleX.value *= zoomFactor.value
         scaleY.value *= zoomFactor.value
     }
-    drawGraph();
-};
+    drawGraph()
+}
 
 // Commence la transition du graphique
 const startTransition = (event: any) => {
@@ -294,7 +294,7 @@ const startTransition = (event: any) => {
     if (graphic.value) {
         graphic.value.style.cursor = 'grabbing'
     }
-};
+}
 
 // Effectue la transition du graphique
 const doTransition = (event: any) => {
@@ -306,7 +306,7 @@ const doTransition = (event: any) => {
         transitionStartY.value = event.clientY
         drawGraph()
     }
-};
+}
 
 // Termine la transition du graphique
 const endTransition = (event: any) => {
@@ -314,7 +314,7 @@ const endTransition = (event: any) => {
     if (graphic.value) {
         graphic.value.style.cursor = 'grab'
     }
-};
+}
 
 // Centre le graphique
 const centerGraph = () => {
@@ -342,16 +342,16 @@ const resetGraph = () => {
 // Au montage du module
 onMounted(() => {
     resetGraph()
-});
+})
 
 // Au changement des fonctions
 watch(() => props.functions, () => {
     drawGraph()
-}, { deep: true });
+}, { deep: true })
 
 // Au changement des variables
 watch(() => props.variables, () => {
     drawGraph()
-}, { deep: true });
+}, { deep: true })
 
 </script>

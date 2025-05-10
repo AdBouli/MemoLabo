@@ -3,7 +3,7 @@ import { all, create, type EvalFunction } from 'mathjs'
 export class MathFunc {
 
     // Math.js
-    private static math = create(all, {});
+    private static math = create(all, {})
 
     // Générateur d'expression mathématiques
     private static* exprGen(): Generator<string> {

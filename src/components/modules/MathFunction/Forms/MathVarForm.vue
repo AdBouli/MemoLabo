@@ -20,7 +20,7 @@
 
 <script setup lang="ts">
 
-import { MathVar } from '@/components/modules/MathFunction/Models/MathVar';
+import { MathVar } from '@/components/modules/MathFunction/Models/MathVar'
 
 const var_ = defineModel({
     type: Object as () => MathVar,
@@ -28,11 +28,11 @@ const var_ = defineModel({
 })
 
 const increment = () => {
-    ++var_.value.value;
+    ++var_.value.value
 }
 
 const decrement = () => {
-    --var_.value.value;
+    --var_.value.value
 }
 
 </script>

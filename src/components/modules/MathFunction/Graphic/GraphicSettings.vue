@@ -88,7 +88,8 @@ interface Scaling {
     precision?: number
 }
 
-const resolutions = ref([144, 240, 360, 480, 720, 1080, 1440, 2160]);
+const resolutions = ref([144, 240, 360, 480, 720, 1080, 1440, 2160])
+
 const ratios = ref({
     '1:1': 1/1,
     '4:3': 4/3,
@@ -96,10 +97,10 @@ const ratios = ref({
     '16:9': 16/9
 })
 
-const emit = defineEmits<{'update:scaling': [value: Scaling]}>();
+const emit = defineEmits<{'update:scaling': [value: Scaling]}>()
 
 const handleInput = (value: Scaling) => {
-    emit('update:scaling', value);
-};
+    emit('update:scaling', value)
+}
 
 </script>

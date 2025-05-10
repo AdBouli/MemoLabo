@@ -48,37 +48,37 @@
 
 import { ref, onMounted, watch } from 'vue'
 import MathFuncBuilder from '@/components/modules/MathFunction/Forms/MathFuncForm.vue'
-import MathVarBuilder from '@/components/modules/MathFunction/Forms/MathVarForm.vue';
+import MathVarBuilder from '@/components/modules/MathFunction/Forms/MathVarForm.vue'
 import Graphic from '@/components/modules/MathFunction/Graphic/Graphic.vue'
 import { MathFunc } from '@/components/modules/MathFunction/Models/MathFunc'
 import { MathVar } from '@/components/modules/MathFunction/Models/MathVar'
 
 // Initialise les réferences
-const functions = ref<MathFunc[]>([MathFunc.create('x^2')]);
-const variables = ref<{[key: string]: MathVar}>({});
-const showGrid = ref(true);
+const functions = ref<MathFunc[]>([MathFunc.create('x^2')])
+const variables = ref<{[key: string]: MathVar}>({})
+const showGrid = ref(true)
 
 // Au montage du module
 onMounted(() => {
     functions.value.push(MathFunc.create('x^3'))
     functions.value.push(MathFunc.create('1.5x'))
     functions.value.push(MathFunc.create('-2x+0.3'))
-});
+})
 
 watch(functions, (newFunctions) => {
     newFunctions.forEach((func) => {
         func.getVariables().forEach((var_) => {
             if (variables.value[var_] === undefined) {
-                variables.value[var_] = new MathVar(var_, 0);
+                variables.value[var_] = new MathVar(var_, 0)
                 // todo supprimer la variable si elle n'est plus utilisée
                 //  Object.keys(variables.value).forEach((key) => {
                 //     if (!newFunctions.some(func => func.getVariables().includes(key))) {
-                //         delete variables.value[key];
+                //         delete variables.value[key]
                 //     }
-                // });
+                // })
             }
-        });
-    });
-}, { deep: true });
+        })
+    })
+}, { deep: true })
 
 </script>

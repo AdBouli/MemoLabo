@@ -37,7 +37,7 @@
 
 <script setup lang="ts">
 
-import { RouterLink } from 'vue-router';
-import ToggleColorTheme from '../common/ToggleColorTheme.vue';
+import { RouterLink } from 'vue-router'
+import ToggleColorTheme from '../common/ToggleColorTheme.vue'
 
 </script>

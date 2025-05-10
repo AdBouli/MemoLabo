@@ -55,11 +55,11 @@ export default {
     name: 'Bootstrap directive',
 
     mounted(element: HTMLElement, binding: any) {
-        const Component = bsComponentMap[binding.arg?.toLowerCase()];
+        const Component = bsComponentMap[binding.arg?.toLowerCase()]
         if (!Component) {
-            console.warn(`Bootstrap directive "${binding.arg}" not found. Available directives: ${Object.keys(bsComponentMap).join(', ')}`);
-            return;
+            console.warn(`Bootstrap directive "${binding.arg}" not found. Available directives: ${Object.keys(bsComponentMap).join(', ')}`)
+            return
         }
-        return new Component.constructor(element, {...Component.defaultOptions, ...binding.value});
+        return new Component.constructor(element, {...Component.defaultOptions, ...binding.value})
     }
 }
