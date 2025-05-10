@@ -47,11 +47,11 @@
 <script setup lang="ts">
 
 import { ref, onMounted, watch } from 'vue'
-import MathFuncBuilder from '@/components/modules/MathFunctionModule/Forms/MathFuncForm.vue'
-import MathVarBuilder from '@/components/modules/MathFunctionModule/Forms/MathVarForm.vue';
-import Graphic from '@/components/modules/MathFunctionModule/Graphic/Graphic.vue'
-import { MathFunc } from '@/components/modules/MathFunctionModule/Models/MathFunc'
-import { MathVar } from '@/components/modules/MathFunctionModule/Models/MathVar'
+import MathFuncBuilder from '@/components/modules/MathFunction/Forms/MathFuncForm.vue'
+import MathVarBuilder from '@/components/modules/MathFunction/Forms/MathVarForm.vue';
+import Graphic from '@/components/modules/MathFunction/Graphic/Graphic.vue'
+import { MathFunc } from '@/components/modules/MathFunction/Models/MathFunc'
+import { MathVar } from '@/components/modules/MathFunction/Models/MathVar'
 
 // Initialise les réferences
 const functions = ref<MathFunc[]>([MathFunc.create('x^2')]);

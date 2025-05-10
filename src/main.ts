@@ -6,6 +6,7 @@
 import './assets/bootstrap-custom.scss'
 import 'bootstrap'
 import 'bootstrap-icons/font/bootstrap-icons.css'
+import { router } from '@/router'
 
 // Importation de Vue et de l'application principale
 import { createApp } from 'vue'
@@ -21,6 +22,9 @@ setGlobalProperties(app)
 
 // Directives 
 app.directive('bs', vBootstrap)
+
+// Routage
+app.use(router)
 
 // Lancement de l'application dans <div id="app">
 app.mount('#app')

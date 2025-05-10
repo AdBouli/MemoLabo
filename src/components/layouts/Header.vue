@@ -1,17 +1,28 @@
 <template>
     <header class="navbar navbar-expand-lg bg-body-secondary">
         <nav class="container-fluid">
-            <a class="navbar-brand" href="#">{{ $appName }}</a>
+            <RouterLink to="/" class="navbar-brand">{{ $appName }}</RouterLink>
             <button class="navbar-toggler" type="button"
                 data-bs-toggle="collapse" data-bs-target="#nav-menu">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="nav-menu">
                 <ul class="navbar-nav">
-                    <a class="nav-link active" href="#">Menu 1</a>
-                    <a class="nav-link" href="#">Menu 2</a>
-                    <a class="nav-link" href="#">Menu3</a>
-                    <a class="nav-link" href="#">Menu 4</a>
+                    <RouterLink :to="{ name: 'home' }" class="nav-link" active-class="active">
+                        Accueil
+                    </RouterLink>
+                    <RouterLink :to="{ name: 'mathfunc' }" class="nav-link" active-class="active">
+                        Funcky maths
+                    </RouterLink>
+                    <RouterLink :to="{ name: 'second' }" class="nav-link" active-class="active">
+                        Menu 2
+                    </RouterLink>
+                    <RouterLink to="/" class="nav-link disabled">
+                        Menu 3
+                    </RouterLink>
+                    <RouterLink to="/" class="nav-link disabled">
+                        Menu 4
+                    </RouterLink>
                     <div class="form-check form-switch d-lg-none" >
                         <input type="checkbox" class="form-check-input" id="lightDarkSwitch"
                             :checked="isDarkMode" @change="toggleDarkMode"/>
@@ -36,6 +47,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted, watch } from 'vue';
+import { RouterLink } from 'vue-router';
 
 const isDarkMode = ref(false);
 const prefersDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;

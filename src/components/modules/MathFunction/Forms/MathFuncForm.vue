@@ -26,7 +26,7 @@
 <script setup lang="ts">
 
 import { ref } from 'vue'
-import { MathFunc } from '@/components/modules/MathFunctionModule/Models/MathFunc'
+import { MathFunc } from '@/components/modules/MathFunction/Models/MathFunc'
 
 const colorPicker = ref<HTMLInputElement | null>(null)
 

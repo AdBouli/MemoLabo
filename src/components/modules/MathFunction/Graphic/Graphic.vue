@@ -54,9 +54,9 @@
 <script setup lang="ts">
 
 import { ref, onMounted, watch } from 'vue'
-import { MathFunc } from '@/components/modules/MathFunctionModule/Models/MathFunc'
-import { MathVar } from '@/components/modules/MathFunctionModule/Models/MathVar'
-import GraphicSettings from '@/components/modules/MathFunctionModule/Graphic/GraphicSettings.vue'
+import { MathFunc } from '@/components/modules/MathFunction/Models/MathFunc'
+import { MathVar } from '@/components/modules/MathFunction/Models/MathVar'
+import GraphicSettings from '@/components/modules/MathFunction/Graphic/GraphicSettings.vue'
 
 // Propriétés
 const props = defineProps({
