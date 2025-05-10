@@ -27,18 +27,24 @@
                                 v-model="grid" @change="drawGraph">
                             <label for="showGridInput" class="form-check-label">Afficher la grille</label>
                         </div>
-                        <!-- scale X -->
-                        <input type="range" class="form-range" id="scaleX" min="10" max="500" step="10"
-                            v-model.number="scaleX" @input="drawGraph">
-                        <label for="scaleX" class="form-label">Échelle X : {{ $fmtNum(scaleX/100) }}</label>
-                        <!-- scale Y -->
-                        <input type="range" class="form-range" id="scaleY" min="10" max="500" step="10"
-                            v-model.number="scaleY" @input="drawGraph">
-                        <label for="scaleY" class="form-label">Échelle Y : {{ $fmtNum(scaleY/100) }}</label>
-                        <!-- Precision -->
-                        <input type="range" class="form-range" id="precision" min="0.1" max="20" step="0.1"
-                            v-model.number="precision" @input="drawGraph">
-                        <label for="precision" class="form-label">Précision : {{ $fmtNum(precision) }}</label>
+                        <!-- Scale X -->
+                         <RangeNumberInput
+                            :label="'Échelle X :'" :id="'scaleX'"
+                            :min="10" :max="500" :step="1" 
+                            :model-value="scaleX" @update:model-value="scaleX = $event; drawGraph()"
+                            />
+                        <!-- Scale Y -->
+                        <RangeNumberInput
+                            :label="'Échelle Y :'" :id="'scaleY'"
+                            :min="10" :max="500" :step="1" 
+                            :model-value="scaleY" @update:model-value="scaleY = $event; drawGraph()"
+                            />
+                        <!-- Précision -->
+                        <RangeNumberInput
+                            :label="'Précision :'" :id="'precision'"
+                            :min="0.1" :max="50" :step="0.1" 
+                            :model-value="precision" @update:model-value="precision = $event; drawGraph()"
+                            />
                     </div>
                 </div>
             </div>
@@ -84,10 +90,11 @@
 
 <script setup lang="ts">
 
-    import { ref, onMounted, watch, nextTick } from 'vue'
-    import { MathFunc } from '../MathFunc'
-    import GraphicResolution from './GraphicResolution.vue'
-    import type { MathVar } from '../MathVar'
+    import { ref, onMounted, watch } from 'vue'
+    import { MathFunc } from '@/components/MathFunctionModule/MathFunc'
+    import { MathVar } from '@/components/MathFunctionModule/MathVar'
+    import GraphicResolution from '@/components/MathFunctionModule/Graphic/GraphicResolution.vue'
+    import RangeNumberInput from '@/components/Generic/RangeNumberInput.vue'
 
     // Propriétés
     const props = defineProps({
