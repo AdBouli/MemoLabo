@@ -19,7 +19,8 @@
 </template>
 
 <script setup lang="ts">
-import { MathVar } from './MathVar';
+
+import { MathVar } from '@/components/modules/MathFunctionModule/Models/MathVar';
 
 const var_ = defineModel({
     type: Object as () => MathVar,

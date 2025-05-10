@@ -1,15 +1,11 @@
 <template>
-    <Navbar />
-    <div class="container">
-        <div class="row">
-            <div class="col">
-                <MathFunction />
-            </div>
-        </div>
-    </div>
+    <Header />
+    <Content />
+    <Footer />
 </template>
 
 <script setup lang="ts">
-    import Navbar from './components/Navbar.vue'
-    import MathFunction from './components/MathFunctionModule/MathFuncModule.vue'
+    import Header from '@/components/layouts/Header.vue';
+    import Content from '@/components/layouts/Content.vue';
+    import Footer from '@/components/layouts/Footer.vue';
 </script>

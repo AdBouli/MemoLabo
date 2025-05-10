@@ -1,6 +1,6 @@
 <template>
-    <header class="navbar navbar-expand-lg bg-body-tertiary">
-        <nav class="container">
+    <header class="navbar navbar-expand-lg bg-body-secondary">
+        <nav class="container-fluid">
             <a class="navbar-brand" href="#">{{ $appName }}</a>
             <button class="navbar-toggler" type="button"
                 data-bs-toggle="collapse" data-bs-target="#nav-menu">

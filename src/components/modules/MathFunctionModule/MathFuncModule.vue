@@ -45,39 +45,40 @@
 </template>
 
 <script setup lang="ts">
-    import { ref, onMounted, watch } from 'vue'
-    import MathFuncBuilder from './MathFuncBuilder.vue'
-    import MathVarBuilder from './MathVarBuilder.vue';
-    import Graphic from './Graphic/Graphic.vue'
-    import { MathFunc } from './MathFunc'
-    import { MathVar } from './MathVar'
 
-    // Initialise les réferences
-    const functions = ref<MathFunc[]>([MathFunc.create('x^2')]);
-    const variables = ref<{[key: string]: MathVar}>({});
-    const showGrid = ref(true);
+import { ref, onMounted, watch } from 'vue'
+import MathFuncBuilder from '@/components/modules/MathFunctionModule/Forms/MathFuncForm.vue'
+import MathVarBuilder from '@/components/modules/MathFunctionModule/Forms/MathVarForm.vue';
+import Graphic from '@/components/modules/MathFunctionModule/Graphic/Graphic.vue'
+import { MathFunc } from '@/components/modules/MathFunctionModule/Models/MathFunc'
+import { MathVar } from '@/components/modules/MathFunctionModule/Models/MathVar'
 
-    // Au montage du module
-    onMounted(() => {
-        functions.value.push(MathFunc.create('x^3'))
-        functions.value.push(MathFunc.create('1.5x'))
-        functions.value.push(MathFunc.create('-2x+0.3'))
-    });
+// Initialise les réferences
+const functions = ref<MathFunc[]>([MathFunc.create('x^2')]);
+const variables = ref<{[key: string]: MathVar}>({});
+const showGrid = ref(true);
 
-    watch(functions, (newFunctions) => {
-        newFunctions.forEach((func) => {
-            func.getVariables().forEach((var_) => {
-                if (variables.value[var_] === undefined) {
-                    variables.value[var_] = new MathVar(var_, 0);
-                    // todo supprimer la variable si elle n'est plus utilisée
-                    //  Object.keys(variables.value).forEach((key) => {
-                    //     if (!newFunctions.some(func => func.getVariables().includes(key))) {
-                    //         delete variables.value[key];
-                    //     }
-                    // });
-                }
-            });
+// Au montage du module
+onMounted(() => {
+    functions.value.push(MathFunc.create('x^3'))
+    functions.value.push(MathFunc.create('1.5x'))
+    functions.value.push(MathFunc.create('-2x+0.3'))
+});
+
+watch(functions, (newFunctions) => {
+    newFunctions.forEach((func) => {
+        func.getVariables().forEach((var_) => {
+            if (variables.value[var_] === undefined) {
+                variables.value[var_] = new MathVar(var_, 0);
+                // todo supprimer la variable si elle n'est plus utilisée
+                //  Object.keys(variables.value).forEach((key) => {
+                //     if (!newFunctions.some(func => func.getVariables().includes(key))) {
+                //         delete variables.value[key];
+                //     }
+                // });
+            }
         });
-    }, { deep: true });
+    });
+}, { deep: true });
 
 </script>

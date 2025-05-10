@@ -9,9 +9,9 @@ import 'bootstrap-icons/font/bootstrap-icons.css'
 
 // Importation de Vue et de l'application principale
 import { createApp } from 'vue'
-import App from './App.vue'
-import vBootstrap from './directives/Bootstrap'
-import { setGlobalProperties } from './start/GlobalProperties'
+import App from '@/App.vue'
+import vBootstrap from '@/directives/Bootstrap'
+import { setGlobalProperties } from '@/start/GlobalProperties'
 
 // Création de l'application 
 const app = createApp(App)
