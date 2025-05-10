@@ -1,6 +1,6 @@
 <template>
-    <div class="collapse" id="scalingSettings">
-        <div class="card card-body mt-2 border border-primary">
+    <div>
+        <div class="card card-body mt-1 border border-primary">
             <!-- Grille -->
             <div class="form-check">
                 <input type="checkbox" class="form-check-input" id="showGridInput" style="cursor: pointer;"
@@ -19,16 +19,18 @@
                 :min="10" :max="500" :step="1" 
                 :model-value="scaleY" @update:model-value="handleInput({ scaleY: $event })"
                 />
-            <div class="row">
+            <div class="row mt-2">
                 <div class="col-6">
-                    <select class="form-select form-select-sm mt-2" @change="handleInput({ height: parseInt(($event.target as HTMLSelectElement).value) })">
+                    <select class="form-select form-select-sm"
+                        @change="handleInput({ height: parseInt(($event.target as HTMLSelectElement).value) })">
                         <option v-for="(resolution, index) in resolutions" :key="index" :value="resolution" :selected="resolution == height">
                             {{ resolution }}p
                         </option>
                     </select>
                 </div>
                 <div class="col-6">
-                    <select class="form-select form-select-sm mt-2" @change="handleInput({ ratio: parseFloat(($event.target as HTMLSelectElement).value) })">
+                    <select class="form-select form-select-sm"
+                        @change="handleInput({ ratio: parseFloat(($event.target as HTMLSelectElement).value) })">
                         <option v-for="(ratio, name) in ratios" :key="name" :value="ratio" :selected="ratio == props.ratio">
                             {{ name }}
                         </option>

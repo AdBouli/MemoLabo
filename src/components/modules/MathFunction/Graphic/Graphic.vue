@@ -18,7 +18,7 @@
                     data-bs-toggle="collapse" data-bs-target="#graphicSettingsCollapse">
                     <i class="bi bi-sliders"></i>
                 </button>
-                <GraphicSettings :id="'graphicSettingsCollapse'"
+                <GraphicSettings id="graphicSettingsCollapse" class="collapse"
                     :grid="grid" :scaleX="scaleX" :scaleY="scaleY" :height="height" :precision="precision"
                     @update:scaling="setGraphic($event)" />
             </div>
@@ -33,7 +33,7 @@
             <!-- Bouton de réinitialisation -->
             <div class="position-absolute bottom-0 end-0 mb-2 me-2">
                 <button type="button" class="btn btn-outline-primary"
-                    v-bs:tooltip="{title: 'Réinitialiser le graphique', placement: 'right'}"
+                    v-bs:tooltip="{title: 'Réinitialiser le graphique', placement: 'left'}"
                     @click="resetGraph">
                     <i class="bi bi-arrow-clockwise"></i> 
                 </button>

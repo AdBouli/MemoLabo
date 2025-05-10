@@ -1,11 +1,13 @@
 <template>
-    <header class="navbar navbar-expand-lg bg-body-secondary">
+    <header class="navbar navbar-expand-lg bg-primary bg-opacity-50">
         <nav class="container-fluid">
+            <!-- Bouton d'accueil -->
             <RouterLink to="/" class="navbar-brand">{{ $appName }}</RouterLink>
             <button class="navbar-toggler" type="button"
                 data-bs-toggle="collapse" data-bs-target="#nav-menu">
                 <span class="navbar-toggler-icon"></span>
             </button>
+            <!-- Menu -->
             <div class="collapse navbar-collapse" id="nav-menu">
                 <ul class="navbar-nav">
                     <RouterLink :to="{ name: 'home' }" class="nav-link" active-class="active">
@@ -23,71 +25,19 @@
                     <RouterLink to="/" class="nav-link disabled">
                         Menu 4
                     </RouterLink>
-                    <div class="form-check form-switch d-lg-none" >
-                        <input type="checkbox" class="form-check-input" id="lightDarkSwitch"
-                            :checked="isDarkMode" @change="toggleDarkMode"/>
-                        <label class="form-check-label" for="lightDarkSwitch" id="lightDarkLabel">
-                            <i v-if="isDarkMode" class="bi bi-moon-stars-fill"></i>
-                            <i v-else class="bi bi-sun-fill"></i>
-                        </label>
-                    </div>
+                    <!-- Bascule de thèmes clair/sombre [responsive : petit]-->
+                    <ToggleColorTheme class="d-lg-none" />
                 </ul>
             </div>
-            <div class="form-check form-switch d-none d-lg-block">
-                <input type="checkbox" class="form-check-input" id="lightDarkSwitch"
-                    :checked="isDarkMode" @change="toggleDarkMode" />
-                <label class="form-check-label" for="lightDarkSwitch" id="lightDarkLabel">
-                    <i v-if="isDarkMode" class="bi bi-moon-stars-fill"></i>
-                    <i v-else class="bi bi-sun-fill"></i>
-                </label>
-            </div>
+            <!-- Bascule de thèmes clair/sombre [responsive : large] -->
+            <ToggleColorTheme class="d-none d-lg-block" />
         </nav>
     </header>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, watch } from 'vue';
+
 import { RouterLink } from 'vue-router';
+import ToggleColorTheme from '../common/ToggleColorTheme.vue';
 
-const isDarkMode = ref(false);
-const prefersDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
-
-onMounted(() => {
-    // Vérifier la préférence système au montage
-    if (localStorage.getItem('theme') === 'dark' || (localStorage.getItem('theme') === null && prefersDarkMode)) {
-        enableDarkMode();
-    } else {
-        enableLightMode();
-    }
-});
-
-watch(isDarkMode, (newVal) => {
-    if (newVal) {
-        enableDarkMode();
-        localStorage.setItem('theme', 'dark');
-    } else {
-        enableLightMode();
-        localStorage.setItem('theme', 'light');
-    }
-});
-
-const enableDarkMode = () => {
-    document.documentElement.setAttribute('data-bs-theme', 'dark');
-    isDarkMode.value = true;
-};
-
-const enableLightMode = () => {
-    document.documentElement.setAttribute('data-bs-theme', 'light');
-    isDarkMode.value = false;
-};
-
-const toggleDarkMode = () => {
-    isDarkMode.value = !isDarkMode.value;
-};
 </script>
-
-<style scoped>
-    #lightDarkLabel, #lightDarkSwitch {
-        cursor: pointer;
-    }
-</style>
