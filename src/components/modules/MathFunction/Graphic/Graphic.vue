@@ -327,14 +327,12 @@ const centerGraph = () => {
 // Reinitialise le graphique
 const resetGraph = () => {
     setGraphic({
+        displayRatio: DEFAULT_DISPLAY_RATIO,
         height: DEFAULT_HEIGHT,
         scaleX: DEFAULT_SCALE,
         scaleY: DEFAULT_SCALE,
         precision: DEFAULT_PRECISION
     })
-    scaleX.value = DEFAULT_SCALE
-    scaleY.value = DEFAULT_SCALE
-    precision.value = DEFAULT_PRECISION
     centerGraph()
     drawGraph()
 }
