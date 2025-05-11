@@ -5,7 +5,7 @@
             <i :class="icon"></i>
         </span>
         <select class="form-select form-select-sm"
-            @change="handleChange">
+            @change="handleChange" @wheel.prevent="handleWheel">
             <option v-for="(value, name) in options"
             :key="name" :value="value" :selected="value == modelValue">
                 {{ name }}
@@ -45,6 +45,17 @@ const emit = defineEmits<{
 
 const handleChange = (event: Event) => {
     emit('update:modelValue', (event.target as HTMLInputElement).value)
+}
+
+const handleWheel = (event: WheelEvent) => {
+    const select = event.target as HTMLSelectElement
+    const nbOptions = select.options.length
+    if (event.deltaY > 0) { 
+        if (select.selectedIndex + 1 < nbOptions) ++select.selectedIndex
+    } else {
+        if (select.selectedIndex > 0) --select.selectedIndex
+    }
+    handleChange(event)
 }
 
 </script>
