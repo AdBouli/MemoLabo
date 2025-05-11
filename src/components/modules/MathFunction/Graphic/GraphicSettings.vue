@@ -9,37 +9,38 @@
             </div>
             <!-- Scale X -->
             <RangeNumberInput class="mt-2"
-                :label="'Échelle X :'" :id="'scaleX'"
+                :label="'Échelle X'" :id="'scaleX'"
+                :icon="['bi', 'bi-arrows']"
                 :min="10" :max="500" :step="1" 
                 :model-value="scaleX" @update:model-value="handleInput({ scaleX: $event })"
                 />
             <!-- Scale Y -->
             <RangeNumberInput class="mt-2"
-                :label="'Échelle Y :'" :id="'scaleY'"
+                :label="'Échelle Y'" :id="'scaleY'"
+                :icon="['bi', 'bi-arrows-vertical']"
                 :min="10" :max="500" :step="1" 
                 :model-value="scaleY" @update:model-value="handleInput({ scaleY: $event })"
                 />
             <div class="row mt-2">
+                <!-- Résolution -->
                 <div class="col-6">
-                    <select class="form-select form-select-sm"
-                        @change="handleInput({ height: parseInt(($event.target as HTMLSelectElement).value) })">
-                        <option v-for="(resolution, index) in resolutions" :key="index" :value="resolution" :selected="resolution == height">
-                            {{ resolution }}p
-                        </option>
-                    </select>
+                    <Select :label="'Résolution'" :id="'resolution'"
+                        :icon="['bi', 'bi-stars']"
+                        :options="resolutions" :model-value="height"
+                        @update:model-value="handleInput({ height: $event })"/>
                 </div>
+                <!-- Ratio d'affichage -->
                 <div class="col-6">
-                    <select class="form-select form-select-sm"
-                        @change="handleInput({ ratio: parseFloat(($event.target as HTMLSelectElement).value) })">
-                        <option v-for="(ratio, name) in ratios" :key="name" :value="ratio" :selected="ratio == props.ratio">
-                            {{ name }}
-                        </option>
-                    </select>
+                    <Select :label="'Ratio d\'affichage'" :id="'displayRatio'"
+                        :icon="['bi', 'bi-aspect-ratio-fill']"
+                        :options="ratios" :model-value="displayRatio"
+                        @update:model-value="handleInput({ displayRatio: $event })"/>
                 </div>
             </div>
             <!-- Précision -->
             <RangeNumberInput class="mt-2"
-                :label="'Précision :'" :id="'precision'"
+                :label="'Précision'" :id="'precision'"
+                :icon="['bi', 'bi-rulers']"
                 :min="0.1" :max="50" :step="0.1" 
                 :model-value="precision" @update:model-value="handleInput({ precision: $event })"
                 />
@@ -49,8 +50,9 @@
 
 <script setup lang="ts">
 
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import RangeNumberInput from '@/components/common/RangeNumberInput.vue'
+import Select from '@/components/common/Select.vue'
 
 const props = defineProps({
     grid: {
@@ -69,7 +71,7 @@ const props = defineProps({
         type: Number,
         default: 720
     },
-    ratio: {
+    displayRatio: {
         type: Number,
         default: 16/10
     },
@@ -84,17 +86,30 @@ interface Scaling {
     scaleX?: number
     scaleY?: number
     height?: number
-    ratio?: number
+    displayRatio?: number
     precision?: number
 }
 
-const resolutions = ref([144, 240, 360, 480, 720, 1080, 1440, 2160])
+const resolutions = ref({
+    '144p': 144,
+     '240p': 240,
+     '360p': 360,
+     '480p': 480,
+     '720p': 720,
+     '1080p': 1080,
+     '1440p': 1440,
+     '2160p': 2160
+})
 
 const ratios = ref({
     '1:1': 1/1,
     '4:3': 4/3,
     '16:10': 16/10,
     '16:9': 16/9
+})
+
+onMounted(() => {
+    console.log(typeof ratios.value)
 })
 
 const emit = defineEmits<{'update:scaling': [value: Scaling]}>()

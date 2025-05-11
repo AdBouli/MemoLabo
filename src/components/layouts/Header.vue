@@ -1,5 +1,5 @@
 <template>
-    <header class="navbar navbar-expand-lg bg-primary bg-opacity-50">
+    <header class="navbar navbar-expand-lg bg-primary bg-opacity-25">
         <nav class="container-fluid">
             <!-- Bouton d'accueil -->
             <RouterLink to="/" class="navbar-brand">{{ $appName }}</RouterLink>

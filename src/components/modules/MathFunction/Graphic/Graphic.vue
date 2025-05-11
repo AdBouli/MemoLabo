@@ -19,7 +19,8 @@
                     <i class="bi bi-sliders"></i>
                 </button>
                 <GraphicSettings id="graphicSettingsCollapse" class="collapse"
-                    :grid="grid" :scaleX="scaleX" :scaleY="scaleY" :height="height" :precision="precision"
+                    :grid="grid" :scale-x="scaleX" :scale-y="scaleY"
+                    :height="height" :display-ratio="displayRatio" :precision="precision"
                     @update:scaling="setGraphic($event)" />
             </div>
             <!-- Bouton de recentrage -->
@@ -71,9 +72,9 @@ const props = defineProps({
 })
 
 // Valeurs par défaut
-const DEFAULT_RATIO = 16 / 10
+const DEFAULT_DISPLAY_RATIO = 16 / 10
 const DEFAULT_HEIGHT = 720
-const DEFAULT_WIDTH = DEFAULT_HEIGHT * DEFAULT_RATIO
+const DEFAULT_WIDTH = DEFAULT_HEIGHT * DEFAULT_DISPLAY_RATIO
 const DEFAULT_SCALE = 100
 const DEFAULT_PRECISION = 1
 const DEFAULT_ZOOM_FACTOR = 2
@@ -85,7 +86,7 @@ const FUNC_COLOR = '#F00'
 
 // Initialise les réferences
 const graphic = ref<HTMLCanvasElement | null>(null)
-const ratio = ref<number>(DEFAULT_RATIO)
+const displayRatio = ref<number>(DEFAULT_DISPLAY_RATIO)
 const width = ref<number>(DEFAULT_WIDTH)
 const height = ref<number>(DEFAULT_HEIGHT)
 const scaleX = ref<number>(DEFAULT_SCALE)
@@ -106,7 +107,7 @@ const nbOperations = ref(0)
 
 // Paramètre le graphique
 const setGraphic = (options: {
-    ratio?: number
+    displayRatio?: number
     height?: number
     scaleX?: number
     scaleY?: number
@@ -115,8 +116,8 @@ const setGraphic = (options: {
 }) => {
     if (graphic.value) {
         // ratio
-        if (options.ratio !== undefined) {
-            ratio.value = options.ratio
+        if (options.displayRatio !== undefined) {
+            displayRatio.value = options.displayRatio
             options.height = options.height ?? height.value // pour recalculer les dimensions juste après
         }
         // height
@@ -126,7 +127,7 @@ const setGraphic = (options: {
             const oldHeight = height.value
             // Taille du graphique
             height.value = options.height
-            width.value = height.value * ratio.value
+            width.value = height.value * displayRatio.value
             widthRatio.value = (graphic.value.parentNode as HTMLElement)?.offsetWidth / width.value
             // Redimensionne le canvas
             graphic.value.width = width.value

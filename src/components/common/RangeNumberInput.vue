@@ -1,11 +1,14 @@
 <template>
-    <div class="input-group input-group-sm">
-        <span class="input-group-text">{{ label }}</span>
-        <input type="range" class="form-control" style="cursor: pointer;"
+    <div class="input-group input-group-sm"
+        v-bs:tooltip="{ title: label }">
+        <span class="input-group-text">
+            <i :class="icon"></i>
+        </span>
+        <input type="range" class="form-control w-auto" style="cursor: pointer;"
             :min="min" :max="max" :step="step"
             :value="modelValue" @input="handleInput"
             @wheel.prevent="handleWheel"/>
-        <input type="number" class="form-control"
+        <input type="number" class="form-control w-25"
             :min="min" :max="max" :step="step"
             :value="modelValue" @input="handleInput" />
     </div>
@@ -17,6 +20,10 @@ const props = defineProps({
     label: {
         type: String,
         required: true,
+    },
+    icon: {
+        type: Array<String>,
+        required: true
     },
     modelValue: {
         type: Number,
@@ -33,10 +40,6 @@ const props = defineProps({
     step: {
         type: Number,
         default: 1,
-    },
-    feedbackText: {
-        type: String,
-        default: undefined
     }
 })
 
@@ -48,11 +51,15 @@ const handleInput = (event: Event) => {
     emit('update:modelValue', (event.target as HTMLInputElement).valueAsNumber)
 }
 
-const handleWheel = (event: any) => {
+const WHEEL_SPEED_FACTOR = 5
+
+const handleWheel = (event: WheelEvent) => {
+    const input = event.target as HTMLInputElement
+    const step = parseFloat(input.step) * WHEEL_SPEED_FACTOR
     if (event.deltaY > 0) {
-        (event.target as HTMLInputElement).valueAsNumber -= parseFloat(event.target.step)*5
+        input.valueAsNumber -= step
     } else {
-        (event.target as HTMLInputElement).valueAsNumber += parseFloat(event.target.step)*5
+        input.valueAsNumber += step
     }
     handleInput(event)
 }

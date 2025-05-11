@@ -47,7 +47,7 @@ const bsComponentMap: { [key: string]: {constructor: new (...args: any[]) => any
     },
     'tooltip': {
         constructor: Tooltip,
-        defaultOptions: {}
+        defaultOptions: {delay: {show: 500}}
     }
 }
 
