@@ -16,8 +16,8 @@
                     <RouterLink :to="{ name: 'mathfunc' }" class="nav-link" active-class="active">
                         Funcky maths
                     </RouterLink>
-                    <RouterLink :to="{ name: 'second' }" class="nav-link" active-class="active">
-                        Menu 2
+                    <RouterLink :to="{ name: 'glosscraft' }" class="nav-link" active-class="active">
+                        Gloss craft
                     </RouterLink>
                     <RouterLink to="/" class="nav-link disabled">
                         Menu 3

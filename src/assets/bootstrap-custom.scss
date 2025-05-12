@@ -5,7 +5,27 @@
 @import "../../node_modules/bootstrap/scss/functions";
 
 // 2. Include any default variable overrides here
-$primary: #FF8B7D;
+
+$myBlue: #80CEFF;
+$myCyan: #80F4FF;
+$myGreen: #ACFF80;
+$myYellow: #FFFD80;
+$myOrange: #FFCA80;
+$myRed: #FF8080;
+$myMagenta: #AE80FF;
+$myGray: #8E9FAA;
+$myLight: tint-color($myGray, 80%);
+$myDark: shade-color($myGray, 80%);
+
+
+$primary: $myBlue;
+$secondary: $myGray;
+$success: $myGreen;
+$danger: $myRed;
+$warning: $myOrange;
+$info: $myCyan;
+$light: $myLight;
+$dark: $myDark;
 
 // 3. Include remainder of required Bootstrap stylesheets (including any separate color mode stylesheets)
 @import "../../node_modules/bootstrap/scss/variables";
