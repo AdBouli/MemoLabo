@@ -1,3 +1,237 @@
+class rgb {
+    red: number
+    green: number
+    blue: number
+
+    constructor(
+        red: number,
+        green: number,
+        blue: number
+    ) {
+        this.red = red
+        this.green = green
+        this.blue = blue
+    }
+
+    toHSL(): hsl {
+        const red = this.red / 255
+        const green = this.green / 255
+        const blue = this.blue / 255
+
+        const maxRGB = Math.max(red, green, blue)
+        const minRGB = Math.min(red, green, blue)
+
+        // Chromatique (si maxRGB === minRGB)
+        let hue = 0
+        let sat = 0
+        // Calcul de la luminosité
+        let lig = (maxRGB + minRGB) / 2
+
+        if (maxRGB !== minRGB) {
+            const delta = maxRGB - minRGB
+            // Calcule de la saturation
+            sat = lig > 0.5 ? delta / (2 - maxRGB - minRGB) : delta / (maxRGB + minRGB)
+            // Calcule de la teinte (hue)
+            switch (maxRGB) {
+                case red:
+                    hue = (green - blue) / delta + (green < blue ? 6 : 0)
+                    break
+                case green:
+                    hue = (blue - red) / delta + 2
+                    break
+                case blue:
+                    hue = (red - green) / delta + 4
+                    break
+            }
+            hue /= 6
+        }
+        // Conversion vers HSL
+        return new hsl(
+            hue * 360,
+            sat * 100,
+            lig * 100
+        )
+    }
+
+    toHSV(): hsv {
+        const red = this.red / 255
+        const green = this.green / 255
+        const blue = this.blue / 255
+
+        const maxRGB = Math.max(red, green, blue)
+        const minRGB = Math.min(red, green, blue)
+
+        // Chromatique (si maxRGB === minRGB)
+        let hue = 0
+        let sat = 0
+        // Calcul de la valeur
+        let val = maxRGB
+
+        if (maxRGB !== minRGB) {
+            const delta = maxRGB - minRGB
+            // Calcule de la saturation
+            sat = maxRGB == 0 ? 0 : delta / maxRGB
+            // Calcule de la teinte (hue)
+            switch (maxRGB) {
+                case red:
+                    hue = (green - blue) / delta + (green < blue ? 6 : 0)
+                    break
+                case green:
+                    hue = (blue - red) / delta + 2
+                    break
+                case blue:
+                    hue = (red - green) / delta + 4
+                    break
+            }
+            hue /= 6
+        }
+
+        // Conversion vers HSV
+        return new hsv(
+            hue * 360,
+            sat * 100,
+            val * 100
+        )
+    }
+
+    toLab() {
+        // Normaliser les valeurs RVB sur la plage [0, 1]
+        const rNorm = this.red / 255;
+        const gNorm = this.green / 255;
+        const bNorm = this.blue / 255;
+        
+        // Appliquer la correction gamma (sRGB vers RVB linéaire)
+        const rLinear = rNorm <= 0.04045 ? rNorm / 12.92 : Math.pow((rNorm + 0.055) / 1.055, 2.4);
+        const gLinear = gNorm <= 0.04045 ? gNorm / 12.92 : Math.pow((gNorm + 0.055) / 1.055, 2.4);
+        const bLinear = bNorm <= 0.04045 ? bNorm / 12.92 : Math.pow((bNorm + 0.055) / 1.055, 2.4);
+        
+        // Définir les valeurs XYZ de l'illuminant standard D65 (utilisées pour sRGB)
+        const Xref = 0.95047;
+        const Yref = 1.00000;
+        const Zref = 1.08883;
+        
+        // Convertir RVB linéaire en XYZ
+        const X = rLinear * 0.4124564 + gLinear * 0.3575761 + bLinear * 0.1804375;
+        const Y = rLinear * 0.2126729 + gLinear * 0.7151522 + bLinear * 0.0721750;
+        const Z = rLinear * 0.0193339 + gLinear * 0.1191920 + bLinear * 0.9503041;
+        
+        // Normaliser XYZ par le point blanc de référence
+        const xNorm = X / Xref;
+        const yNorm = Y / Yref;
+        const zNorm = Z / Zref;
+        
+        // Définir une petite constante epsilon
+        const epsilon = 0.008856;
+        const kappa = 903.3;
+        
+        // Fonction pour calculer f(t)
+        function f(t: number) {
+            return t > epsilon ? Math.pow(t, 1 / 3) : (kappa * t + 16) / 116;
+        }
+        
+        // Calculer L*, a* et b*
+        return new lab(
+            116 * f(yNorm) - 16,
+            500 * (f(xNorm) - f(yNorm)),
+            200 * (f(yNorm) - f(zNorm))
+        )
+    }
+
+    // Alternative
+    // toLab() : lab {
+    //     let red = this.red / 255
+    //     let green = this.green / 255
+    //     let blue = this.blue / 255
+    
+    //     // RGB linéaire
+    //     red = red > 0.04045 ? Math.pow((red + 0.055) / 1.055, 2.4) : red / 12.92
+    //     green = green > 0.04045 ? Math.pow((green + 0.055) / 1.055, 2.4) : green / 12.92
+    //     blue = blue > 0.04045 ? Math.pow((blue + 0.055) / 1.055, 2.4) : blue / 12.92
+    
+    //     // Espace colorimétrique CIE XYZ
+    //     const X = (red * 0.4124 + green * 0.3576 + blue * 0.1805) / 0.95047;
+    //     const Y = (red * 0.2126 + green * 0.7152 + blue * 0.0722) / 1.00000;
+    //     const Z = (red * 0.0193 + green * 0.1192 + blue * 0.9505) / 1.08883;
+    
+    //     // Fonction de transformation
+    //     const transform = (t: number) => (t > 0.008856) ? Math.pow(t, 1 / 3) : (7.787 * t) + (16 / 116)
+    //     const transX = transform(X)
+    //     const transY = transform(Y)
+    //     const transZ = transform(Z)
+    
+    //     // Conversion vers L*a*b*
+    //     return new lab(
+    //         (116 * transY) - 16,
+    //         500 * (transX - transY),
+    //         200 * (transY - transZ)
+    //     )
+    // }
+    
+    toString(): string {
+        return `rgb(${this.red}, ${this.green}, ${this.blue})`
+    }
+}
+
+class hsl {
+    hue: number
+    saturation: number
+    lightness: number
+
+    constructor(
+        hue: number,
+        saturation: number,
+        lightness: number
+    ) {
+        this.hue = hue
+        this.saturation = saturation
+        this.lightness = lightness
+    }
+
+    toString() {
+        return `HSL(${this.hue}, ${this.saturation}, ${this.lightness})`
+    }
+}
+
+class hsv {
+    hue: number
+    saturation: number
+    value: number
+
+    constructor(
+        hue: number,
+        saturation: number,
+        value: number
+    ) {
+        this.hue = hue
+        this.saturation = saturation
+        this.value = value
+    }
+
+    toString() {
+        return `HSV(${this.hue}, ${this.saturation}, ${this.value})`
+    }
+}
+
+class lab {
+    lightness: number
+    a_: number
+    b_: number
+
+    constructor(
+        lightness: number,
+        a_: number,
+        b_: number
+    ) {
+        this.lightness = lightness
+        this.a_ = a_
+        this.b_ = b_
+    }
+
+    toString() {
+        return `L*a*b*(${this.lightness}, ${this.a_}, ${this.b_})`
+    }
+}
+
 export class Color {
 
     public static named = {
@@ -152,146 +386,61 @@ export class Color {
         yellowgreen: '#9acd32'
     }
 
-    private hexa: string
+    public hexa: string = '#00000'
     
-    private rgb: {
-        red: number
-        green: number
-        blue: number
-    } = {red: 0, green: 0, blue: 0}
+    public rgb: rgb
 
-    private hsl: {
-        hue: number
-        saturation: number
-        lightness: number
-    } = {hue: 0, saturation: 0, lightness: 0}
+    public hsl: hsl
 
-    private lab: {
-        lightness: number
-        a_: number
-        b_: number
-    } = {lightness: 0, a_: 0, b_: 0}
+    public hsv: hsv
 
-    private generateHSL() {
-        const red = this.rgb.red / 255
-        const green = this.rgb.green / 255
-        const blue = this.rgb.blue / 255
-
-        const maxRGB = Math.max(red, green, blue)
-        const minRGB = Math.min(red, green, blue)
-
-        let hue: number, sat: number, lig: number = (maxRGB + minRGB) / 2
-
-        if (maxRGB === minRGB) {
-            // Archomatique
-            hue = sat = 0
-        } else {
-            const diff = maxRGB - minRGB
-            sat = lig > .5 ? diff / (2 - maxRGB - minRGB) : diff / (maxRGB + minRGB)
-            switch (maxRGB) {
-                case red:
-                    hue = (green - blue) / diff + (green < blue ? 6 : 0)
-                    break
-                case green:
-                    hue = (blue - red) / diff + 2
-                    break
-                case blue:
-                    hue = (red - green) / diff + 4
-                    break
-            }
-            hue! /= 6
-        }
-        this.hsl = {
-            hue: hue! * 360,
-            saturation: sat * 100,
-            lightness: lig * 100
-        }
-    }
-
-    private generateLab() {
-        let red = this.rgb.red / 255
-        let green = this.rgb.green / 255
-        let blue = this.rgb.blue / 255
-
-        // RGB linéaire
-        red = red > 0.04045 ? Math.pow((red + 0.055) / 1.055, 2.4) : red / 12.92
-        green = green > 0.04045 ? Math.pow((green + 0.055) / 1.055, 2.4) : green / 12.92
-        blue = blue > 0.04045 ? Math.pow((blue + 0.055) / 1.055, 2.4) : blue / 12.92
-
-        // Espace colorimétrique CIE XYZ
-        const X = (red * 0.4124 + green * 0.3576 + blue * 0.1805) / 0.95047;
-        const Y = (red * 0.2126 + green * 0.7152 + blue * 0.0722) / 1.00000;
-        const Z = (red * 0.0193 + green * 0.1192 + blue * 0.9505) / 1.08883;
-
-        // Fonction de transformation
-        const transform = (t: number) => (t > 0.008856) ? Math.pow(t, 1 / 3) : (7.787 * t) + (16 / 116)
-        const transX = transform(X)
-        const transY = transform(Y)
-        const transZ = transform(Z)
-
-        // Conversion vers L*a*b*
-        this.lab = {
-            lightness: (116 * transY) - 16,
-            a_: 500 * (transX - transY),
-            b_: 200 * (transY - transZ)
-        }
-    }
+    public lab: lab
 
     // Constructeur
     public constructor(color: {
-        hexa: string
+        hexa?: string
+        rgb?: {
+            red: number
+            green: number
+            blue: number
+        }
     }) {
-        // Suppression du '#' en début et conversion en minuscule
-        this.hexa = color.hexa.replace(/^#/, '').toLowerCase()
+        let red = 0
+        let green = 0
+        let blue = 0
 
-        // Conversion d'un code 3 à un code 6 caractère
-        if (this.hexa.match(/^([0-9a-f]{3})$/i))
-            this.hexa = this.hexa.split('').map(char => char + char).join('')
-        
-        // Si le code couleur est invalide
-        if (!this.hexa.match(/^([0-9a-f]{6})$/i))
-            throw new Error(`Code couleur invalide : <${this.hexa}>`)
+        // Si 
+        if (color.hexa) {
+            // Suppression du # en début et conversion en minuscule
+            this.hexa = color.hexa.replace(/^#/, '').toLowerCase()
+    
+            // Conversion d'un code 3 à un code 6 caractère
+            if (this.hexa.match(/^([0-9a-f]{3})$/i))
+                this.hexa = this.hexa.split('').map(char => char + char).join('')
 
-        // Définition RGB
-        this.rgb = {
-            red:parseInt(this.hexa.substring(0, 2), 16),
-            green: parseInt(this.hexa.substring(2, 4), 16),
-            blue: parseInt(this.hexa.substring(4, 6), 16)
+            // Rajout du # en début
+            this.hexa = `#${this.hexa}`
+            
+            // Si le code couleur est invalide
+            if (!this.hexa.match(/^#([0-9a-f]{6})$/i))
+                throw new Error(`Code couleur invalide : <${this.hexa}>`)
+    
+            // Définition RGB
+            red = parseInt(this.hexa.substring(1, 3), 16),
+            green = parseInt(this.hexa.substring(3, 5), 16),
+            blue = parseInt(this.hexa.substring(5, 7), 16)
+        } else if (color.rgb) {
+            red = color.rgb.red
+            green = color.rgb.green
+            blue = color.rgb.blue
+        } else {
+            throw new Error(`Configuration hexa ou rgb obligatoire`)
         }
 
-        // Génération du HSL
-        this.generateHSL()
-
-        // Génération du L*a*b*
-        this.generateLab()
+        // Calcule des système colorimétriques
+        this.rgb = new rgb(red, green, blue)
+        this.hsl = this.rgb.toHSL()
+        this.hsv = this.rgb.toHSV()
+        this.lab = this.rgb.toLab()
     }
-
-    public toHex(): string {
-        return `#${this.hexa}`
-    }
-
-    public toRGB(): string {
-        return `rgb(${this.rgb.red}, ${this.rgb.green}, ${this.rgb.blue})`
-    }
-
-    public toHSL(): string {
-        return `HSL(${this.hsl.hue}, ${this.hsl.saturation}, ${this.hsl.lightness})`
-    }
-
-    public toLab(): string {
-        return `L*a*b*(${this.lab.lightness}, ${this.lab.a_}, ${this.lab.b_})`
-    }
-
-    public getRGB() {
-        return this.rgb
-    }
-    
-    public getHSL() {
-        return this.hsl
-    }
-    
-    public getLab() {
-        return this.lab
-    }
-
 }
