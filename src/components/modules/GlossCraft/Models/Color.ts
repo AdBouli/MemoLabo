@@ -3,6 +3,7 @@ class rgb {
     green: number
     blue: number
 
+    // Constructeur
     constructor(
         red: number,
         green: number,
@@ -14,10 +15,12 @@ class rgb {
     }
 
     toHSL(): hsl {
+        // Normaliser les valeurs RVB sur la plage [0, 1]
         const red = this.red / 255
         const green = this.green / 255
         const blue = this.blue / 255
 
+        // Trouver la valeur maximale et minimale parmi les trois couleurs
         const maxRGB = Math.max(red, green, blue)
         const minRGB = Math.min(red, green, blue)
 
@@ -54,10 +57,12 @@ class rgb {
     }
 
     toHSV(): hsv {
+        // Normaliser les valeurs RVB sur la plage [0, 1]
         const red = this.red / 255
         const green = this.green / 255
         const blue = this.blue / 255
 
+        // Trouver la valeur maximale et minimale parmi les trois couleurs
         const maxRGB = Math.max(red, green, blue)
         const minRGB = Math.min(red, green, blue)
 
@@ -228,7 +233,7 @@ class lab {
     }
 
     toString() {
-        return `L*a*b*(${this.lightness}, ${this.a_}, ${this.b_})`
+        return `L*a*b*(${Math.round(this.lightness)}, ${Math.round(this.a_)}, ${Math.round(this.b_)})`
     }
 }
 
@@ -387,17 +392,13 @@ export class Color {
     }
 
     public hexa: string = '#00000'
-    
     public rgb: rgb
-
     public hsl: hsl
-
     public hsv: hsv
-
     public lab: lab
 
     // Constructeur
-    public constructor(color: {
+    public constructor(options: {
         hexa?: string
         rgb?: {
             red: number
@@ -405,39 +406,44 @@ export class Color {
             blue: number
         }
     }) {
+        // Initialisation des valeurs RGB
         let red = 0
         let green = 0
         let blue = 0
+        let alpha = 255
 
-        // Si 
-        if (color.hexa) {
+        // Si un code hexadécimal a été fourni
+        if (options.hexa) {
             // Suppression du # en début et conversion en minuscule
-            this.hexa = color.hexa.replace(/^#/, '').toLowerCase()
+            this.hexa = options.hexa.replace(/^#/, '').toLowerCase()
     
-            // Conversion d'un code 3 à un code 6 caractère
+            // Conversion d'un code 3 à un code 6 caractères
             if (this.hexa.match(/^([0-9a-f]{3})$/i))
                 this.hexa = this.hexa.split('').map(char => char + char).join('')
 
             // Rajout du # en début
             this.hexa = `#${this.hexa}`
             
-            // Si le code couleur est invalide
-            if (!this.hexa.match(/^#([0-9a-f]{6})$/i))
-                throw new Error(`Code couleur invalide : <${this.hexa}>`)
-    
-            // Définition RGB
-            red = parseInt(this.hexa.substring(1, 3), 16),
-            green = parseInt(this.hexa.substring(3, 5), 16),
-            blue = parseInt(this.hexa.substring(5, 7), 16)
-        } else if (color.rgb) {
-            red = color.rgb.red
-            green = color.rgb.green
-            blue = color.rgb.blue
+            // Si le code couleur est valide
+            if (this.hexa.match(/^#([0-9a-f]{6})$/i)) {
+                // Définition RGB
+                red = parseInt(this.hexa.substring(1, 3), 16),
+                green = parseInt(this.hexa.substring(3, 5), 16),
+                blue = parseInt(this.hexa.substring(5, 7), 16)
+            } else {
+                console.warn(`Code hexa invalide : ${this.hexa}, utilisation des valeurs initiales : r:${red}, g${green}, b:${blue}`)
+            }
+        } else
+        // Si une composite rouge vert bleu a été fournie
+        if (options.rgb) {
+            red = options.rgb.red
+            green = options.rgb.green
+            blue = options.rgb.blue
         } else {
-            throw new Error(`Configuration hexa ou rgb obligatoire`)
+            console.warn(`Aucune donnée hexa ou rgb fournie, utilisation des valeurs initiales : r:${red}, g${green}, b:${blue}`)
         }
 
-        // Calcule des système colorimétriques
+        // Calcul des systèmes colorimétriques
         this.rgb = new rgb(red, green, blue)
         this.hsl = this.rgb.toHSL()
         this.hsv = this.rgb.toHSV()

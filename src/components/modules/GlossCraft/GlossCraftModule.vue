@@ -20,7 +20,7 @@ const baseColor = ref<Color>()
 
 onMounted(() => {
   baseColor.value = new Color({
-    hexa: '#FF00FF'
+    hexa: '#FF0FF'
   })
 })
 
