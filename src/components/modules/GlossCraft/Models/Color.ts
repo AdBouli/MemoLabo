@@ -192,8 +192,37 @@ class hsl {
         this.lightness = lightness
     }
 
+    toRGB(): rgb {
+        const hue = this.hue / 360
+        const sat = this.saturation / 100
+        const lig = this.lightness / 100
+
+        let red = 0
+        let green = 0
+        let blue = 0
+
+        if (sat !== 0) {
+            const hueToRGB = (p: number, q: number, t: number) => {
+                if (t < 0) t += 1
+                if (t > 1) t -= 1
+                if (t < 1 / 6) return p + (q - p) * 6 * t
+                if (t < 1 / 2) return q
+                if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6
+                return p;
+            };
+
+            const q = lig < 0.5 ? lig * (1 + sat) : lig + sat - lig * sat
+            const p = 2 * lig - q
+            red = hueToRGB(p, q, hue + 1 / 3)
+            green = hueToRGB(p, q, hue)
+            blue = hueToRGB(p, q, hue - 1 / 3)
+        }
+
+        return new rgb (Math.round(red * 255), Math.round(green * 255), Math.round(blue * 255))
+    }
+
     toString() {
-        return `HSL(${this.hue}, ${this.saturation}, ${this.lightness})`
+        return `HSL(${Math.round(this.hue)}, ${Math.round(this.saturation)}, ${Math.round(this.lightness)})`
     }
 }
 
@@ -212,8 +241,47 @@ class hsv {
         this.value = value
     }
 
+    toRGB(): rgb {
+        const hue = this.hue / 360;
+        const sat = this.saturation / 100;
+        const val = this.value / 100;
+
+        let red = 0
+        let green = 0
+        let blue = 0
+
+        const i = Math.floor(hue * 6);
+        const f = hue * 6 - i;
+        const p = val * (1 - sat);
+        const q = val * (1 - f * sat);
+        const t = val * (1 - (1 - f) * sat);
+
+        switch (i % 6) {
+            case 0:
+                red = val; green = t; blue = p;
+                break;
+            case 1:
+                red = q; green = val; blue = p;
+                break;
+            case 2:
+                red = p; green = val; blue = t;
+                break;
+            case 3:
+                red = p; green = q; blue = val;
+                break;
+            case 4:
+                red = t; green = p; blue = val;
+                break;
+            case 5:
+                red = val; green = p; blue = q;
+                break;
+        }
+
+        return new rgb(Math.round(red * 255), Math.round(green * 255), Math.round(blue * 255))
+    }
+
     toString() {
-        return `HSV(${this.hue}, ${this.saturation}, ${this.value})`
+        return `HSV(${Math.round(this.hue)}, ${Math.round(this.saturation)}, ${Math.round(this.value)})`
     }
 }
 
@@ -230,6 +298,41 @@ class lab {
         this.lightness = lightness
         this.a_ = a_
         this.b_ = b_
+    }
+
+    toRGB(): rgb {
+        const y = (this.lightness + 16) / 116;
+        const x = this.a_ / 500 + y;
+        const z = y - this.b_ / 200;
+
+        const delta = 6 / 29;
+
+        const fx = x > delta ? Math.pow(x, 3) : (x - 4 / 29) * (108 / 841);
+        const fy = y > delta ? Math.pow(y, 3) : (y - 4 / 29) * (108 / 841);
+        const fz = z > delta ? Math.pow(z, 3) : (z - 4 / 29) * (108 / 841);
+
+        const Xref = 0.95047;
+        const Yref = 1.00000;
+        const Zref = 1.08883;
+
+        const X = fx * Xref;
+        const Y = fy * Yref;
+        const Z = fz * Zref;
+
+        let r = X * 3.2404542 + Y * -1.5371385 + Z * -0.4985314;
+        let g = X * -0.9692660 + Y * 1.8760108 + Z * 0.0415560;
+        let b_val = X * 0.0556434 + Y * -0.2040259 + Z * 1.0572252;
+
+        // Gamma correction (linear RGB to sRGB)
+        r = r <= 0.0031308 ? 12.92 * r : 1.055 * Math.pow(r, 1 / 2.4) - 0.055;
+        g = g <= 0.0031308 ? 12.92 * g : 1.055 * Math.pow(g, 1 / 2.4) - 0.055;
+        b_val = b_val <= 0.0031308 ? 12.92 * b_val : 1.055 * Math.pow(b_val, 1 / 2.4) - 0.055;
+
+        return new rgb(
+            Math.round(Math.max(0, Math.min(255, r * 255))),
+            Math.round(Math.max(0, Math.min(255, g * 255))),
+            Math.round(Math.max(0, Math.min(255, b_val * 255)))
+        )
     }
 
     toString() {

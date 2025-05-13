@@ -5,8 +5,11 @@
       <p>{{ baseColor?.hexa }}</p>
       <p>{{ baseColor?.rgb }}</p>
       <p>{{ baseColor?.hsl }}</p>
+      <p>{{ baseColor?.hsl.toRGB() }}</p>
       <p>{{ baseColor?.hsv }}</p>
+      <p>{{ baseColor?.hsv.toRGB() }}</p>
       <p>{{ baseColor?.lab }}</p>
+      <p>{{ baseColor?.lab.toRGB() }}</p>
     </div>
 
 </template>
@@ -20,7 +23,7 @@ const baseColor = ref<Color>()
 
 onMounted(() => {
   baseColor.value = new Color({
-    hexa: '#FF0FF'
+    hexa: '#ab6715'
   })
 })
 
