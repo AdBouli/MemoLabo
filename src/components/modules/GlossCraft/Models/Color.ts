@@ -14,6 +14,14 @@ class rgb {
         this.blue = blue
     }
 
+    toHexa(): string {
+        // Conversion des valeurs RVB en hexadécimal
+        const red = this.red.toString(16).padStart(2, '0')
+        const green = this.green.toString(16).padStart(2, '0')
+        const blue = this.blue.toString(16).padStart(2, '0')
+        return `#${red}${green}${blue}`
+    }
+
     toHSL(): hsl {
         // Normaliser les valeurs RVB sur la plage [0, 1]
         const red = this.red / 255

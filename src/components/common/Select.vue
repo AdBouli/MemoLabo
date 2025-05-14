@@ -1,5 +1,5 @@
 <template>
-    <div class="input-group input-group-sm"
+    <div class="input-group" :class="{'input-group-sm': size == 'sm', 'input-group-lg': size == 'lg'}"
         v-bs:tooltip="{title: label}">
         <span class="input-group-text">
             <i :class="icon"></i>
@@ -36,6 +36,12 @@ const props = defineProps({
     options: {
         type: Object as PropType<Record<string, ModelValueType>>,
         required: true
+    },
+    size: {
+        type: String,
+        required: false,
+        default: '',
+        validator: (size) => size == '' || size == 'lg' || size == 'sm'
     }
 })
 

@@ -10,14 +10,14 @@
             <!-- Scale X -->
             <RangeNumberInput class="mt-2"
                 :label="'Échelle X'" :id="'scaleX'"
-                :icon="['bi', 'bi-arrows']"
+                :icon="['bi', 'bi-arrows']" :size="'sm'"
                 :min="10" :max="500" :step="1" 
                 :model-value="scaleX" @update:model-value="handleInput({ scaleX: $event })"
                 />
             <!-- Scale Y -->
             <RangeNumberInput class="mt-2"
                 :label="'Échelle Y'" :id="'scaleY'"
-                :icon="['bi', 'bi-arrows-vertical']"
+                :icon="['bi', 'bi-arrows-vertical']" :size="'sm'"
                 :min="10" :max="500" :step="1" 
                 :model-value="scaleY" @update:model-value="handleInput({ scaleY: $event })"
                 />
@@ -25,14 +25,14 @@
                 <!-- Résolution -->
                 <div class="col-6">
                     <Select :label="'Résolution'" :id="'resolution'"
-                        :icon="['bi', 'bi-stars']"
+                        :icon="['bi', 'bi-stars']" :size="'sm'"
                         :options="resolutions" :model-value="height"
                         @update:model-value="handleInput({ height: $event })"/>
                 </div>
                 <!-- Ratio d'affichage -->
                 <div class="col-6">
                     <Select :label="'Ratio d\'affichage'" :id="'displayRatio'"
-                        :icon="['bi', 'bi-aspect-ratio-fill']"
+                        :icon="['bi', 'bi-aspect-ratio-fill']" :size="'sm'"
                         :options="ratios" :model-value="displayRatio"
                         @update:model-value="handleInput({ displayRatio: $event })"/>
                 </div>
@@ -40,7 +40,7 @@
             <!-- Précision -->
             <RangeNumberInput class="mt-2"
                 :label="'Précision'" :id="'precision'"
-                :icon="['bi', 'bi-rulers']"
+                :icon="['bi', 'bi-rulers']" :size="'sm'"
                 :min="0.1" :max="50" :step="0.1" 
                 :model-value="precision" @update:model-value="handleInput({ precision: $event })"
                 />

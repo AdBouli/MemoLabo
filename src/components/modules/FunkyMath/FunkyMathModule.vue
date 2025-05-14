@@ -2,7 +2,7 @@
     <!-- Titre -->
     <div class="row mt-2">
         <div class="col">
-            <h2>Fonctions mathématiques</h2>
+            <h2>Funky maths</h2>
         </div>
     </div>
     <!-- Contenu -->
@@ -47,11 +47,11 @@
 <script setup lang="ts">
 
 import { ref, onMounted, watch } from 'vue'
-import MathFuncBuilder from '@/components/modules/MathFunction/Forms/MathFuncForm.vue'
-import MathVarBuilder from '@/components/modules/MathFunction/Forms/MathVarForm.vue'
-import Graphic from '@/components/modules/MathFunction/Graphic/Graphic.vue'
-import { MathFunc } from '@/components/modules/MathFunction/Models/MathFunc'
-import { MathVar } from '@/components/modules/MathFunction/Models/MathVar'
+import MathFuncBuilder from '@/components/modules/FunkyMath/Forms/MathFuncForm.vue'
+import MathVarBuilder from '@/components/modules/FunkyMath/Forms/MathVarForm.vue'
+import Graphic from '@/components/modules/FunkyMath/Graphic/Graphic.vue'
+import { MathFunc } from '@/components/modules/FunkyMath/Models/MathFunc'
+import { MathVar } from '@/components/modules/FunkyMath/Models/MathVar'
 
 // Initialise les réferences
 const functions = ref<MathFunc[]>([MathFunc.create('x^2')])

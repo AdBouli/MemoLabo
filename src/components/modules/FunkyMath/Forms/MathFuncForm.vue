@@ -26,7 +26,7 @@
 <script setup lang="ts">
 
 import { onMounted, ref, watch } from 'vue'
-import { MathFunc } from '@/components/modules/MathFunction/Models/MathFunc'
+import { MathFunc } from '@/components/modules/FunkyMath/Models/MathFunc'
 
 const colorPicker = ref<HTMLInputElement | null>(null)
 const bgColor = ref<string>("")

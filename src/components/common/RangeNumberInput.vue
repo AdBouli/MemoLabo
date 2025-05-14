@@ -1,8 +1,9 @@
 <template>
-    <div class="input-group input-group-sm"
+    <div class="input-group" :class="{'input-group-sm': size == 'sm', 'input-group-lg': size == 'lg'}"
         v-bs:tooltip="{ title: label }">
         <span class="input-group-text">
-            <i :class="icon"></i>
+            <i v-if="icon" :class="icon"></i>
+            <span v-else>{{ label }}</span>
         </span>
         <input type="range" class="form-control w-auto" style="cursor: pointer;"
             :min="min" :max="max" :step="step"
@@ -23,7 +24,8 @@ const props = defineProps({
     },
     icon: {
         type: Array<String>,
-        required: true
+        required: false,
+        default: null
     },
     modelValue: {
         type: Number,
@@ -31,15 +33,24 @@ const props = defineProps({
     },
     min: {
         type: Number,
+        required: true,
         default: 0,
     },
     max: {
         type: Number,
+        required: true,
         default: 100,
     },
     step: {
         type: Number,
+        required: true,
         default: 1,
+    },
+    size: {
+        type: String,
+        required: false,
+        default: '',
+        validator: (size) => size == '' || size == 'lg' || size == 'sm'
     }
 })
 
