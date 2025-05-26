@@ -1,9 +1,9 @@
 import { createWebHistory, createRouter } from "vue-router"
 
-import HomeModule from "@/components/modules/Home/HomeModule.vue"
-import MathFuncModule from "@/components/modules/FunkyMath/FunkyMathModule.vue"
-import GlossCraft from "@/components/modules/GlossCraft/GlossCraftModule.vue"
-import Error404 from "./components/modules/Error/Error404.vue"
+import HomeModule from "@/views/Home/HomeModule.vue"
+import MathFuncModule from "@/views/FunkyMath/FunkyMathModule.vue"
+import GlossCraft from "@/views/GlossCraft/GlossCraftModule.vue"
+import Error404 from "@/views/Error/Error404.vue"
 
 const routes = [
     { path: '/', component: HomeModule, name: 'home' },

@@ -6,10 +6,8 @@
                 class="border border-primary rounded w-100 h-100" style="cursor: grab;"
                 ref="graphic"
                 @wheel.prevent="doZoom"
-                @mousedown="startTransition"
-                @mousemove="doTransition"
-                @mouseup="endTransition"
-                @mouseleave="endTransition">
+                @mousedown="startTransition" @mousemove="doTransition"
+                @mouseup="endTransition" @mouseleave="endTransition">
             </canvas>
             <!-- Boutons des paramètres -->
             <div class="position-absolute top-0 start-0 mt-2 ms-2">
@@ -55,9 +53,9 @@
 <script setup lang="ts">
 
 import { ref, onMounted, watch } from 'vue'
-import { MathFunc } from '@/components/modules/FunkyMath/Models/MathFunc'
-import { MathVar } from '@/components/modules/FunkyMath/Models/MathVar'
-import GraphicSettings from '@/components/modules/FunkyMath/Graphic/GraphicSettings.vue'
+import { MathFunc } from '@/models/FunkyMath/MathFunc'
+import { MathVar } from '@/models/FunkyMath/MathVar'
+import GraphicSettings from '@/views/FunkyMath/Graphic/GraphicSettings.vue'
 
 // Propriétés
 const props = defineProps({

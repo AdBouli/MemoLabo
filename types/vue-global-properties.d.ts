@@ -5,9 +5,5 @@ declare module '@vue/runtime-core' {
         $appName: string
         $authorName: string
         $authorEmail: string
-        $fmtNum: (value: number, precision?: number) => string
-        // Déclarez ici toutes vos propriétés globales, exemples :
-        // $apiUrl: string
-        // $formatDate: (date: Date) => string
     }
 }

@@ -17,7 +17,6 @@ $myGray: #8E9FAA;
 $myLight: tint-color($myGray, 80%);
 $myDark: shade-color($myGray, 80%);
 
-
 $primary: $myBlue;
 $secondary: $myGray;
 $success: $myGreen;
@@ -26,6 +25,13 @@ $warning: $myOrange;
 $info: $myCyan;
 $light: $myLight;
 $dark: $myDark;
+
+@import url('https://fonts.googleapis.com/css2?family=Schoolbell&display=swap&family=Permanent+Marker&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap');
+$font-family-sans-serif: 'Roboto Mono';
+$font-family-code: 'Roboto Mono';
+$font-size-base: 0.95rem;
+$headings-font-family: 'Permanent Marker';
+$input-btn-font-family: $font-family-code;
 
 // 3. Include remainder of required Bootstrap stylesheets (including any separate color mode stylesheets)
 @import "../../node_modules/bootstrap/scss/variables";

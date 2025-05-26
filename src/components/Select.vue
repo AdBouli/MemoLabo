@@ -15,8 +15,7 @@
 </template>
 
 <script setup lang="ts">
-import { string } from 'mathjs';
-import { type PropType } from 'vue';
+import { type PropType } from 'vue'
 
 type ModelValueType = any
 

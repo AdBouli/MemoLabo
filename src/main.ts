@@ -9,7 +9,9 @@ import 'bootstrap-icons/font/bootstrap-icons.css'
 // Importation de Vue et de l'application principale
 import { createApp } from 'vue'
 import App from '@/App.vue'
-import { setGlobalProperties } from '@/start/GlobalProperties'
+import { setGlobalProperties } from '@/utils/vue-global-properties'
+import '@/utils/PrimitivesExtensions'
+import '@/utils/MemoLaboError'
 import vBootstrap from '@/directives/Bootstrap'
 import { router } from '@/router'
 

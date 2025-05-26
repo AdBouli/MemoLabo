@@ -27,12 +27,6 @@ export class MathFunc {
     private static nextExpr = MathFunc.exprGen()
     private static nextColor = MathFunc.colorGen()
 
-    // Usine à fonction
-    public static create(expr: string = MathFunc.nextExpr.next().value): MathFunc
-    {
-        return new MathFunc(expr, MathFunc.nextColor.next().value)
-    }
-
     // Propriétés
     expression: string
     color: string
@@ -40,7 +34,7 @@ export class MathFunc {
     error: boolean
 
     // Constructeur
-   private constructor(
+    private constructor(
         expression: string,
         color: string
     ) {
@@ -49,6 +43,12 @@ export class MathFunc {
         this.function = null
         this.error = false
         this.compile()
+    }
+
+    // Usine à fonction
+    public static create(expr: string = MathFunc.nextExpr.next().value): MathFunc
+    {
+        return new MathFunc(expr, MathFunc.nextColor.next().value)
     }
 
     // Compile l'expression

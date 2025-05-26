@@ -20,7 +20,7 @@
 
 <script setup lang="ts">
 
-import { MathVar } from '@/components/modules/FunkyMath/Models/MathVar'
+import { MathVar } from '@/models/FunkyMath/MathVar'
 
 const var_ = defineModel({
     type: Object as () => MathVar,

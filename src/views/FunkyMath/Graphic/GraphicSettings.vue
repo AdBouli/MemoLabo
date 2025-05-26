@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="w-100">
         <div class="card card-body mt-1 border border-primary">
             <!-- Grille -->
             <div class="form-check">
@@ -50,9 +50,9 @@
 
 <script setup lang="ts">
 
-import { onMounted, ref } from 'vue'
-import RangeNumberInput from '@/components/common/RangeNumberInput.vue'
-import Select from '@/components/common/Select.vue'
+import { ref } from 'vue'
+import RangeNumberInput from '@/components/RangeNumberInput.vue'
+import Select from '@/components/Select.vue'
 
 const props = defineProps({
     grid: {
@@ -106,10 +106,6 @@ const ratios = ref({
     '4:3': 4/3,
     '16:10': 16/10,
     '16:9': 16/9
-})
-
-onMounted(() => {
-    console.log(typeof ratios.value)
 })
 
 const emit = defineEmits<{'update:scaling': [value: Scaling]}>()

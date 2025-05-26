@@ -5,7 +5,7 @@
 </template>
 
 <script setup lang="ts">
-    import Header from '@/components/layouts/Header.vue'
-    import Content from '@/components/layouts/Content.vue'
-    import Footer from '@/components/layouts/Footer.vue'
+    import Header from '@/layouts/Header.vue'
+    import Content from '@/layouts/Content.vue'
+    import Footer from '@/layouts/Footer.vue'
 </script>
