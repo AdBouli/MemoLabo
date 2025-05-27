@@ -1,23 +1,21 @@
 <template>
     <div class="input-group" :class="{'input-group-sm': size == 'sm', 'input-group-lg': size == 'lg'}"
-        v-bs:tooltip="{ title: label, placement: left }">
+        v-bs:tooltip="{ title: label, placement: 'left' }">
         <span class="input-group-text">
             <i v-if="icon" :class="icon"></i>
             <span v-else class="font-monospace">{{ label[0] }}</span>
         </span>
-        <input type="range" class="form-control w-75" style="cursor: pointer;"
+        <input type="range" class="form-control w-auto" style="cursor: pointer;"
             :min="min" :max="max" :step="step"
             :value="modelValue" @input="handleInput"
             @wheel.prevent="handleWheel"/>
-        <input type="number" class="form-control w-auto"
+        <input type="number" class="form-control"
             :min="min" :max="max" :step="step"
             :value="modelValue" @input="handleInput" />
     </div>
 </template>
 
 <script setup lang="ts">
-import { left } from '@popperjs/core';
-
 
 const props = defineProps({
     label: {

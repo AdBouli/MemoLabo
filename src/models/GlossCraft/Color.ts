@@ -226,9 +226,9 @@ export class Color {
             throw new MemoLaboError(`Valeur du bleu invalide : ${rgb.blue}.`)
 
         // Code hexadécimal
-        let hexaR = rgb.red.toString(16).padStart(2, '0')
-        let hexaG = rgb.green.toString(16).padStart(2, '0')
-        let hexaB = rgb.blue.toString(16).padStart(2, '0')
+        let hexaR = Math.round(rgb.red).toString(16).padStart(2, '0')
+        let hexaG = Math.round(rgb.green).toString(16).padStart(2, '0')
+        let hexaB = Math.round(rgb.blue).toString(16).padStart(2, '0')
 
         // Création de la couleur
         return new Color(
