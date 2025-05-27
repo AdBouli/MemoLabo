@@ -165,7 +165,7 @@ export class Color {
         yellowgreen: '#9acd32'
     }
 
-    public static hexValidator: RegExp = /^([#])?([0-9a-f]{3|6})$/i
+    public static hexValidator: RegExp = /^#?([0-9a-f]{6})$/i
 
     public hex: string
     private models: Map<string, BaseColorModel>
@@ -191,6 +191,15 @@ export class Color {
             const constructorName = Constructor.name.toLowerCase()
             this.models.set(constructorName, new Constructor())
             this.models.get(constructorName)?.setFromRGB(rgb)
+        })
+    }
+
+    // Function random
+    static random(): Color {
+        return new Color({
+            red: Math.round(Math.random() * 255),
+            green: Math.round(Math.random() * 255),
+            blue: Math.round(Math.random() * 255)
         })
     }
 
@@ -223,10 +232,6 @@ export class Color {
         // Conversion en minuscule
         hex = hex.toLowerCase()
 
-        // Conversion d'un code 3 à un code 6 caractères
-        if (hex.match(/^([#])?([0-9a-f]{3})$/i))
-            hex = hex.split('').map(char => char + char).join('')
-
         // Rajout du # en début s'il est absent
         hex = hex.charAt(0) === '#' ? hex : `#${hex}`
         
@@ -245,7 +250,7 @@ export class Color {
         
     }
 
-    // Getter
+    // Getter générique
     public get(name: string): BaseColorModel {
         const colorModel = this.models.get(name.toLowerCase())
         if (colorModel === undefined) {
@@ -254,7 +259,7 @@ export class Color {
         return colorModel
     }
 
-    // Setter
+    // Setter générique
     public set(name: string, colorModel: BaseColorModel): void {
         const colorModelName = name.toLowerCase()
         if (this.models.has(name)) {
@@ -270,14 +275,14 @@ export class Color {
         }
     }
 
-    // GETTERS
+    // Getters spécifiques
     get rgb(): IColorModel    { return this.get('rgb') }
     get cielab(): IColorModel { return this.get('cielab') }
     get hsl(): IColorModel    { return this.get('hsl') }
     get hsv(): IColorModel    { return this.get('hsv') }
     get ymck(): IColorModel   { return this.get('ymck') }
 
-    // SETTERS
+    // Setters spécifiques
     set rgb(rgb: RGB)          { this.set('rgb', rgb) }
     set cielab(cielab: CIELAB) { this.set('cielab', cielab) }
     set hsl(hsl: HSL)          { this.set('hsl', hsl) }

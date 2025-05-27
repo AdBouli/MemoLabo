@@ -55,11 +55,7 @@ import ColorModelForm from '@/views/GlossCraft/Forms/ColorModelForm.vue';
 const color = ref<Color>(new Color('#230595'))
 
 const randomColor = () => {
-    color.value = new Color({
-        red: Math.round(Math.random() * 255),
-        green: Math.round(Math.random() * 255),
-        blue: Math.round(Math.random() * 255)
-    })
+    color.value = Color.random()
 }
 
 const updateFromHexa = () => {
