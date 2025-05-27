@@ -8,6 +8,7 @@
     <!-- Contenu -->
     <div class="row mt-2">
         <div class="col-8">
+            <!-- Formulaire de sélection de couleur -->
             <div class="row align-items-end">
                 <div class="col-2">
                     <input type="color" class="form-control form-control-lg form-control-color w-100"
@@ -25,6 +26,7 @@
                 </div>
             </div>
         </div>
+        <!-- Modèles de couleurs -->
         <div class="col-4">
             <div class="vstack gap-1">
                 <ColorModelForm id="color_rgb_form"
@@ -50,10 +52,10 @@ import { type IColorModel } from '@/models/GlossCraft/ColorModels/BaseColorModel
 import { Color } from '@/models/GlossCraft/Color';
 import ColorModelForm from '@/views/GlossCraft/Forms/ColorModelForm.vue';
 
-const color = ref<Color>(Color.createFromHex('#230595'))
+const color = ref<Color>(new Color('#230595'))
 
 const randomColor = () => {
-    color.value = Color.createFromRGB({
+    color.value = new Color({
         red: Math.round(Math.random() * 255),
         green: Math.round(Math.random() * 255),
         blue: Math.round(Math.random() * 255)
@@ -61,11 +63,11 @@ const randomColor = () => {
 }
 
 const updateFromHexa = () => {
-    color.value = Color.createFromHex(color.value.hex)
+    color.value = new Color(color.value.hex)
 }
 
 const updateFromColorModel = (colorModel: IColorModel) => {
-    color.value = Color.createFromRGB(colorModel.toRGB())
+    color.value = new Color(colorModel.toRGB())
 }
 
 

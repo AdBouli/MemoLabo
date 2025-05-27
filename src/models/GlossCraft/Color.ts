@@ -8,8 +8,9 @@ import {
     type YMCKType, YMCK,
 } from "@/models/GlossCraft/ColorModels"
 
-type ColorModelConstructorsType = Array<new (...args: number[]) => BaseColorModel>
+type ColorConfig = string | RGBType
 
+type ColorModelConstructorsType = Array<new (...args: number[]) => BaseColorModel>
 export class Color {
 
     public static named = {
@@ -164,18 +165,28 @@ export class Color {
         yellowgreen: '#9acd32'
     }
 
+    public static hexValidator: RegExp = /^([#])?([0-9a-f]{3|6})$/i
+
     public hex: string
     private models: Map<string, BaseColorModel>
 
     private static colorModelConstructors: ColorModelConstructorsType = [ RGB, HSL, CIELAB, YMCK, HSV ]
 
     // Constructeur
-    private constructor(
-        hex: string,
-        rgb: RGBType
-    ) {
-        this.hex = hex
+    constructor(config: ColorConfig) {
+        let hex: string = '#000000'
+        let rgb: RGBType = { red: 0, green: 0, blue: 0 }
+        if (typeof config === 'string') {
+            if (config.match(Color.hexValidator)) {
+                rgb = Color.hexToRGB(config)
+                hex = config
+            }            
+        } else {
+            hex = Color.rgbToHex(config)
+            rgb = config
+        }
         this.models = new Map<string, BaseColorModel>()
+        this.hex = hex
         Color.colorModelConstructors.forEach(Constructor => {
             const constructorName = Constructor.name.toLowerCase()
             this.models.set(constructorName, new Constructor())
@@ -183,36 +194,8 @@ export class Color {
         })
     }
 
-    // Fonction createFromHex
-    static createFromHex(hex: string): Color {
-        // Conversion en minuscule
-        hex = hex.toLowerCase()
-
-        // Conversion d'un code 3 à un code 6 caractères
-        if (hex.match(/^([#])?([0-9a-f]{3})$/i))
-            hex = hex.split('').map(char => char + char).join('')
-
-        // Rajout du # en début s'il est absent
-        hex = hex.charAt(0) === '#' ? hex : `#${hex}`
-        
-        // Si le code couleur est valide
-        if (hex.match(/^#([0-9a-f]{6})$/i)) {
-            // Création de la couleur
-            return new Color(
-                hex, {
-                    red: parseInt(hex.substring(1, 3), 16),
-                    green: parseInt(hex.substring(3, 5), 16),
-                    blue: parseInt(hex.substring(5, 7), 16)
-                }
-            )
-        } else {
-            // Sinon erreur
-            throw new MemoLaboError(`Code hexadécimal invalide : ${hex}.`)
-        }
-    }
-
-    // Fonction createFromRGB
-    static createFromRGB(rgb: RGBType): Color {
+    // Fonction rgbToHex
+    static rgbToHex(rgb: RGBType): string {
         // Bornes
         const minValue = 0
         const maxValue = 255
@@ -230,11 +213,36 @@ export class Color {
         let hexaG = Math.round(rgb.green).toString(16).padStart(2, '0')
         let hexaB = Math.round(rgb.blue).toString(16).padStart(2, '0')
 
-        // Création de la couleur
-        return new Color(
-            `#${hexaR}${hexaG}${hexaB}`,
-            rgb
-        )
+        // RGB en hexadécimal
+        return `#${hexaR}${hexaG}${hexaB}`
+        
+    }
+
+    // Fonction hexToRGB
+    static hexToRGB(hex: string): RGBType {
+        // Conversion en minuscule
+        hex = hex.toLowerCase()
+
+        // Conversion d'un code 3 à un code 6 caractères
+        if (hex.match(/^([#])?([0-9a-f]{3})$/i))
+            hex = hex.split('').map(char => char + char).join('')
+
+        // Rajout du # en début s'il est absent
+        hex = hex.charAt(0) === '#' ? hex : `#${hex}`
+        
+        // Si le code couleur est valide
+        if (hex.match(/^#([0-9a-f]{6})$/i)) {
+            // Création de la couleur
+            return {
+                red: parseInt(hex.substring(1, 3), 16),
+                green: parseInt(hex.substring(3, 5), 16),
+                blue: parseInt(hex.substring(5, 7), 16)
+            }
+        } else {
+            // Sinon erreur
+            throw new MemoLaboError(`Code hexadécimal invalide : ${hex}.`)
+        }
+        
     }
 
     // Getter
