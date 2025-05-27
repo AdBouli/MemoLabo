@@ -9,22 +9,9 @@
     <div class="row mt-2">
         <div class="col-8">
             <!-- Formulaire de sélection de couleur -->
-            <div class="row align-items-end">
-                <div class="col-2">
-                    <input type="color" class="form-control form-control-lg form-control-color w-100"
-                        v-model="color.hex" @input="updateFromHexa" />
-                </div>
-                <div class="col-10">
-                    <label for="color_hexa_input">Code couleur hexadécimal (3 ou 6 caractères) :</label>
-                    <div class="input-group input-group">
-                        <input type="text" class="form-control" id="color_hexa_input" v-model="color.hex" @change="updateFromHexa">
-                        <button trpe="button" class="btn btn btn-primary px-4"
-                            @click="randomColor()">
-                            <i class="bi bi-shuffle"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
+             <ColorGenForm :color-hex="color.hex"
+                @update="updateFromHex($event)"
+                @random="randomColor()"/>
         </div>
         <!-- Modèles de couleurs -->
         <div class="col-4">
@@ -50,6 +37,7 @@
 import { onMounted, ref } from 'vue';
 import { type IColorModel } from '@/models/GlossCraft/ColorModels/BaseColorModel';
 import { Color } from '@/models/GlossCraft/Color';
+import ColorGenForm from '@/views/GlossCraft/Forms/ColorGenForm.vue';
 import ColorModelForm from '@/views/GlossCraft/Forms/ColorModelForm.vue';
 
 const color = ref<Color>(new Color('#230595'))
@@ -58,8 +46,8 @@ const randomColor = () => {
     color.value = Color.random()
 }
 
-const updateFromHexa = () => {
-    color.value = new Color(color.value.hex)
+const updateFromHex = (hex: string) => {
+    color.value = new Color(hex)
 }
 
 const updateFromColorModel = (colorModel: IColorModel) => {
