@@ -1,4 +1,4 @@
-import { BaseColorModel, ColorModelComponent } from "@/models/GlossCraft/ColorModels/BaseColorModel";
+import { BaseColorModel, ColorModelComponent } from "@/models/GlossCraft/ColorModels/Base";
 import type { RGBType } from "@/models/GlossCraft/ColorModels/RGB"
 
 type YMCKType =  {yellow: number, magenta: number, cyan: number, black: number}
@@ -59,9 +59,9 @@ class YMCK extends BaseColorModel {
 
         // Calculate RGB values
         return {
-            red: (1 - normY) * (1 - normK) * 255,
+            red: (1 - normC) * (1 - normK) * 255,
             green: (1 - normM) * (1 - normK) * 255,
-            blue: (1 - normC) * (1 - normK) * 255
+            blue: (1 - normY) * (1 - normK) * 255
         }
     }
 

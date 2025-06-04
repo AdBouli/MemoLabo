@@ -1,4 +1,4 @@
-import { BaseColorModel, ColorModelComponent } from "@/models/GlossCraft/ColorModels/BaseColorModel"
+import { BaseColorModel, ColorModelComponent } from "@/models/GlossCraft/ColorModels/Base"
 
 type RGBType = {red: number, green: number, blue: number}
 

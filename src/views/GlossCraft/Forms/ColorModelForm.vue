@@ -1,11 +1,11 @@
 <template>
-    <div class="border border-secondary rounded p-2">
+    <div class="shadow rounded p-2">
         <div class="row align-items-center">
-            <div class="col">
+            <div class="col-auto">
                 <h4>{{ colorModel.getName() }}</h4>
             </div>
-            <div class="col-auto">
-                <span class="text-muted">{{ colorModel.toString() }}</span>
+            <div class="col text-end text-truncate">
+                <span class="text-muted" style="font-size: 0.85rem;">{{ colorModel.toString() }}</span>
             </div>
             <div class="col-auto">
                 <button type="button" class="btn btn-outline-secondary"
@@ -25,7 +25,7 @@
 
 <script setup lang="ts">
 import RangeNumberInput from '@/components/RangeNumberInput.vue';
-import { type IColorModel } from '@/models/GlossCraft/ColorModels/BaseColorModel';
+import type { IColorModel } from '@/models/GlossCraft/ColorModels/Base';
 import { useId } from 'vue';
 
 const collapseId = useId()
@@ -38,11 +38,11 @@ const props = defineProps({
 })
 
 const emit = defineEmits<{
-    'update:colorModel': [value: IColorModel]
+    'update': [value: IColorModel]
 }>()
 
 const handleInput = () => {
-    emit('update:colorModel', props.colorModel)
+    emit('update', props.colorModel)
 }
 
 </script>

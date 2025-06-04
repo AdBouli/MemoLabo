@@ -1,4 +1,4 @@
-import { BaseColorModel, ColorModelComponent } from "@/models/GlossCraft/ColorModels/BaseColorModel"
+import { BaseColorModel, ColorModelComponent } from "@/models/GlossCraft/ColorModels/Base"
 import type { RGBType } from "@/models/GlossCraft/ColorModels/RGB"
 
 type HSLType = {hue: number, saturation: number, lightness: number}

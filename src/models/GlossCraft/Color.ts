@@ -9,9 +9,9 @@ import {
 } from "@/models/GlossCraft/ColorModels"
 
 type ColorConfig = string | RGBType
-
 type ColorModelConstructorsType = Array<new (...args: number[]) => BaseColorModel>
-export class Color {
+type ClosestColorType = { name: string, hex: string, accurate: number }
+class Color {
 
     public static named = {
         aliceblue: '#f0f8ff',
@@ -162,7 +162,7 @@ export class Color {
         white: '#ffffff',
         whitesmoke: '#f5f5f5',
         yellow: '#ffff00',
-        yellowgreen: '#9acd32'
+        yellowgreen: '#9acd32',
     }
 
     public static hexValidator: RegExp = /^#?([0-9a-f]{6})$/i
@@ -194,13 +194,50 @@ export class Color {
         })
     }
 
-    // Function random
+    // Fonction random
     static random(): Color {
         return new Color({
             red: Math.round(Math.random() * 255),
             green: Math.round(Math.random() * 255),
             blue: Math.round(Math.random() * 255)
         })
+    }
+
+    // Fonction inverse
+    public inverse(): Color {
+        return new Color({
+            red: 255 - (this.rgb as RGB).red,
+            green: 255 - (this.rgb as RGB).green,
+            blue: 255 - (this.rgb as RGB).blue
+        })
+    }
+
+    // Fonction closest
+    public closest(): ClosestColorType {
+        const calculateAccurate = (rgb1: RGBType, rgb2: RGBType): number => {
+            const rDiff = rgb1.red - rgb2.red
+            const gDiff = rgb1.green - rgb2.green
+            const bDiff = rgb1.blue - rgb2.blue
+            return 1 - Math.sqrt((rDiff * rDiff + gDiff * gDiff + bDiff * bDiff) / (255 * 255 * 3))
+        }
+        const rgb = this.rgb.getModel() as RGBType
+        let closestColorName = ''
+        let closestColorHex = ''
+        let closestColorAccurate = 0
+        for (const [colorName, colorHex] of Object.entries(Color.named)) {
+            const colorRGB = Color.hexToRGB(colorHex)
+            const accurate = calculateAccurate(rgb, colorRGB)
+            if (accurate > closestColorAccurate) {
+                closestColorName = colorName
+                closestColorHex = colorHex
+                closestColorAccurate = accurate
+            }
+        }
+        return {
+            name: closestColorName,
+            hex: closestColorHex,
+            accurate: closestColorAccurate,
+        }
     }
 
     // Fonction rgbToHex
@@ -290,3 +327,5 @@ export class Color {
     set ymck(ymck: YMCK)       { this.set('ymck', ymck) }
 
 }
+
+export { Color, type ClosestColorType }

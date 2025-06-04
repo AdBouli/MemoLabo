@@ -7,13 +7,11 @@
     </div>
     <!-- Contenu -->
     <div class="row mt-2">
-        <div class="col-4 ">
+        <div class="col-4">
             <!-- Fonctions -->
-            <div class="row">
+            <div class="row" v-for="(func, index) in functions" :key="index">
                 <div class="col">
-                    <div v-for="(func, index) in functions" :key="index">
-                        <MathFuncBuilder v-model="functions[index]" @delete="(f) => functions.splice(functions.indexOf(f), 1)" />
-                    </div>
+                    <MathFuncBuilder v-model="functions[index]" @delete="(f) => functions.splice(functions.indexOf(f), 1)" />
                 </div>
             </div>
             <!-- Bouton d'ajout -->
