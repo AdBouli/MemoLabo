@@ -11,9 +11,29 @@ import {
 type ColorConfig = string | RGBType
 type ColorModelConstructorsType = Array<new (...args: number[]) => BaseColorModel>
 type ClosestColorType = { name: string, hex: string, accurate: number }
+enum HtmlColorListEnum { STANDARD, ALL }
 class Color {
 
-    public static named = {
+    public static standardHtmlColors = {
+        black: '#000000',
+        silver: '#c0c0c0',
+        gray: '#808080',
+        white: '#ffffff',
+        maroon: '#800000',
+        red: '#ff0000',
+        purple: '#800080',
+        fuchsia: '#ff00ff',
+        green: '#008000',
+        lime: '#00ff00',
+        olive: '#808000',
+        yellow: '#ffff00',
+        navy: '#000080',
+        blue: '#0000ff',
+        teal: '#008080',
+        aqua: '#00ffff',
+    }
+
+    public static allHtmlColors = {
         aliceblue: '#f0f8ff',
         antiquewhite: '#faebd7',
         aqua: '#00ffff',
@@ -155,7 +175,6 @@ class Color {
         teal: '#008080',
         thistle: '#d8bfd8',
         tomato: '#ff6347',
-        //transparent: 'transparent',
         turquoise: '#40e0d0',
         violet: '#ee82ee',
         wheat: '#f5deb3',
@@ -213,7 +232,7 @@ class Color {
     }
 
     // Fonction closest
-    public closest(): ClosestColorType {
+    public closest(list: HtmlColorListEnum = HtmlColorListEnum.ALL): ClosestColorType {
         const calculateAccurate = (rgb1: RGBType, rgb2: RGBType): number => {
             const rDiff = rgb1.red - rgb2.red
             const gDiff = rgb1.green - rgb2.green
@@ -224,7 +243,8 @@ class Color {
         let closestColorName = ''
         let closestColorHex = ''
         let closestColorAccurate = 0
-        for (const [colorName, colorHex] of Object.entries(Color.named)) {
+        const HtmlColorsList = list == HtmlColorListEnum.ALL ? Color.allHtmlColors : Color.standardHtmlColors
+        for (const [colorName, colorHex] of Object.entries(HtmlColorsList)) {
             const colorRGB = Color.hexToRGB(colorHex)
             const accurate = calculateAccurate(rgb, colorRGB)
             if (accurate > closestColorAccurate) {
@@ -328,4 +348,4 @@ class Color {
 
 }
 
-export { Color, type ClosestColorType }
+export { Color, type ClosestColorType, HtmlColorListEnum }
