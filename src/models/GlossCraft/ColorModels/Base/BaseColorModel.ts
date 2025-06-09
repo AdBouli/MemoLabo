@@ -7,12 +7,12 @@ abstract class BaseColorModel implements IColorModel {
 
     // Propriétés
     private name: string
-    private components: Array<ColorModelComponent>
+    private components: ColorModelComponent[]
 
     // Constructeur
     constructor(
         name: string,
-        components: Array<ColorModelComponent>
+        components: ColorModelComponent[]
     ) {
         this.name = name
         this.components = components
@@ -68,7 +68,7 @@ abstract class BaseColorModel implements IColorModel {
         return model
     }
 
-    public getComponents(): Array<ColorModelComponent> {
+    public getComponents(): ColorModelComponent[] {
         return this.components
     }
 
@@ -84,7 +84,7 @@ abstract class BaseColorModel implements IColorModel {
 
     // Fonction toString()
     toString(): string {
-        let colorValues = new Array<string>()
+        let colorValues: string[] = []
         this.components.forEach(component => {
             colorValues.push(component.code + ":" + component.value)
         })

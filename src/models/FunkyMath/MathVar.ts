@@ -1,4 +1,4 @@
-export class MathVar {
+class MathVar {
     name: string
     value: number
 
@@ -7,3 +7,5 @@ export class MathVar {
         this.value = value
     }
 }
+
+export { MathVar }

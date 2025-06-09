@@ -45,11 +45,11 @@ const props = defineProps({
 })
 
 const emit = defineEmits<{
-    'update:modelValue': [value: any]
+    'update': [value: any]
 }>()
 
 const handleChange = (event: Event) => {
-    emit('update:modelValue', (event.target as HTMLInputElement).value)
+    emit('update', (event.target as HTMLInputElement).value)
 }
 
 const handleWheel = (event: WheelEvent) => {

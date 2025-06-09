@@ -5,347 +5,82 @@ import {
     type CIELABType, CIELAB,
     type HSLType, HSL,
     type HSVType, HSV,
-    type YMCKType, YMCK,
+    type CMYKType, CMYK,
 } from "@/models/GlossCraft/ColorModels"
+import { ColorUtils } from "./ColorUtils"
+import { HexColor } from "./HexColor"
 
-type ColorConfig = string | RGBType
 type ColorModelConstructorsType = Array<new (...args: number[]) => BaseColorModel>
-type ClosestColorType = { name: string, hex: string, accurate: number }
-enum HtmlColorListEnum { STANDARD, ALL }
 class Color {
 
-    public static standardHtmlColors = {
-        black: '#000000',
-        silver: '#c0c0c0',
-        gray: '#808080',
-        white: '#ffffff',
-        maroon: '#800000',
-        red: '#ff0000',
-        purple: '#800080',
-        fuchsia: '#ff00ff',
-        green: '#008000',
-        lime: '#00ff00',
-        olive: '#808000',
-        yellow: '#ffff00',
-        navy: '#000080',
-        blue: '#0000ff',
-        teal: '#008080',
-        aqua: '#00ffff',
-    }
+    public hex: HexColor
+    private _models: Map<string, IColorModel>
 
-    public static allHtmlColors = {
-        aliceblue: '#f0f8ff',
-        antiquewhite: '#faebd7',
-        aqua: '#00ffff',
-        aquamarine: '#7fffd4',
-        azure: '#f0ffff',
-        beige: '#f5f5dc',
-        bisque: '#ffe4c4',
-        black: '#000000',
-        blanchedalmond: '#ffebcd',
-        blue: '#0000ff',
-        blueviolet: '#8a2be2',
-        brown: '#a52a2a',
-        burlywood: '#deb887',
-        cadetblue: '#5f9ea0',
-        chartreuse: '#7fff00',
-        chocolate: '#d2691e',
-        coral: '#ff7f50',
-        cornflowerblue: '#6495ed',
-        cornsilk: '#fff8dc',
-        crimson: '#dc143c',
-        cyan: '#00ffff',
-        darkblue: '#00008b',
-        darkcyan: '#008b8b',
-        darkgoldenrod: '#b8860b',
-        darkgray: '#a9a9a9',
-        darkgreen: '#006400',
-        darkgrey: '#a9a9a9',
-        darkkhaki: '#bdb76b',
-        darkmagenta: '#8b008b',
-        darkolivegreen: '#556b2f',
-        darkorange: '#ff8c00',
-        darkorchid: '#9932cc',
-        darkred: '#8b0000',
-        darksalmon: '#e9967a',
-        darkseagreen: '#8fbc8f',
-        darkslateblue: '#483d8b',
-        darkslategray: '#2f4f4f',
-        darkslategrey: '#2f4f4f',
-        darkturquoise: '#00ced1',
-        darkviolet: '#9400d3',
-        deeppink: '#ff1493',
-        deepskyblue: '#00bfff',
-        dimgray: '#696969',
-        dimgrey: '#696969',
-        dodgerblue: '#1e90ff',
-        firebrick: '#b22222',
-        floralwhite: '#fffaf0',
-        forestgreen: '#228b22',
-        fuchsia: '#ff00ff',
-        gainsboro: '#dcdcdc',
-        ghostwhite: '#f8f8ff',
-        gold: '#ffd700',
-        goldenrod: '#daa520',
-        gray: '#808080',
-        green: '#008000',
-        greenyellow: '#adff2f',
-        grey: '#808080',
-        honeydew: '#f0fff0',
-        hotpink: '#ff69b4',
-        indianred: '#cd5c5c',
-        indigo: '#4b0082',
-        ivory: '#fffff0',
-        khaki: '#f0e68c',
-        lavender: '#e6e6fa',
-        lavenderblush: '#fff0f5',
-        lawngreen: '#7cfc00',
-        lemonchiffon: '#fffacd',
-        lightblue: '#add8e6',
-        lightcoral: '#f08080',
-        lightcyan: '#e0ffff',
-        lightgoldenrodyellow: '#fafad2',
-        lightgray: '#d3d3d3',
-        lightgreen: '#90ee90',
-        lightgrey: '#d3d3d3',
-        lightpink: '#ffb6c1',
-        lightsalmon: '#ffa07a',
-        lightseagreen: '#20b2aa',
-        lightskyblue: '#87cefa',
-        lightslategray: '#778899',
-        lightslategrey: '#778899',
-        lightsteelblue: '#b0c4de',
-        lightyellow: '#ffffe0',
-        lime: '#00ff00',
-        limegreen: '#32cd32',
-        linen: '#faf0e6',
-        magenta: '#ff00ff',
-        maroon: '#800000',
-        mediumaquamarine: '#66cdaa',
-        mediumblue: '#0000cd',
-        mediumorchid: '#ba55d3',
-        mediumpurple: '#9370db',
-        mediumseagreen: '#3cb371',
-        mediumslateblue: '#7b68ee',
-        mediumspringgreen: '#00fa9a',
-        mediumturquoise: '#48d1cc',
-        mediumvioletred: '#c71585',
-        midnightblue: '#191970',
-        mintcream: '#f5fffa',
-        mistyrose: '#ffe4e1',
-        moccasin: '#ffe4b5',
-        navajowhite: '#ffdead',
-        navy: '#000080',
-        oldlace: '#fdf5e6',
-        olive: '#808000',
-        olivedrab: '#6b8e23',
-        orange: '#ffa500',
-        orangered: '#ff4500',
-        orchid: '#da70d6',
-        palegoldenrod: '#eee8aa',
-        palegreen: '#98fb98',
-        paleturquoise: '#afeeee',
-        palevioletred: '#db7093',
-        papayawhip: '#ffefd5',
-        peachpuff: '#ffdab9',
-        peru: '#cd853f',
-        pink: '#ffc0cb',
-        plum: '#dda0dd',
-        powderblue: '#b0e0e6',
-        purple: '#800080',
-        rebeccapurple: '#663399',
-        red: '#ff0000',
-        rosybrown: '#bc8f8f',
-        royalblue: '#4169e1',
-        saddlebrown: '#8b4513',
-        salmon: '#fa8072',
-        sandybrown: '#f4a460',
-        seagreen: '#2e8b57',
-        seashell: '#fff5ee',
-        sienna: '#a0522d',
-        silver: '#c0c0c0',
-        skyblue: '#87ceeb',
-        slateblue: '#6a5acd',
-        slategray: '#708090',
-        slategrey: '#708090',
-        snow: '#fffafa',
-        springgreen: '#00ff7f',
-        steelblue: '#4682b4',
-        tan: '#d2b48c',
-        teal: '#008080',
-        thistle: '#d8bfd8',
-        tomato: '#ff6347',
-        turquoise: '#40e0d0',
-        violet: '#ee82ee',
-        wheat: '#f5deb3',
-        white: '#ffffff',
-        whitesmoke: '#f5f5f5',
-        yellow: '#ffff00',
-        yellowgreen: '#9acd32',
-    }
-
-    public static hexValidator: RegExp = /^#?([0-9a-f]{6})$/i
-
-    public hex: string
-    private models: Map<string, BaseColorModel>
-
-    private static colorModelConstructors: ColorModelConstructorsType = [ RGB, HSL, CIELAB, YMCK, HSV ]
+    private static colorModelConstructors: ColorModelConstructorsType = [ RGB, HSL, CIELAB, CMYK, HSV ]
 
     // Constructeur
-    constructor(config: ColorConfig) {
-        let hex: string = '#000000'
+    constructor(config: HexColor | RGBType) {
+        let hex: HexColor = new HexColor('#000000')
         let rgb: RGBType = { red: 0, green: 0, blue: 0 }
-        if (typeof config === 'string') {
-            if (config.match(Color.hexValidator)) {
-                rgb = Color.hexToRGB(config)
-                hex = config
-            }            
+        if (config instanceof HexColor) {
+            rgb = ColorUtils.hexToRGB(config)
+            hex = config
         } else {
-            hex = Color.rgbToHex(config)
+            hex = ColorUtils.rgbToHex(config)
             rgb = config
         }
-        this.models = new Map<string, BaseColorModel>()
+        this._models = new Map<string, BaseColorModel>()
         this.hex = hex
         Color.colorModelConstructors.forEach(Constructor => {
             const constructorName = Constructor.name.toLowerCase()
-            this.models.set(constructorName, new Constructor())
-            this.models.get(constructorName)?.setFromRGB(rgb)
+            this._models.set(constructorName, new Constructor())
+            this._models.get(constructorName)?.setFromRGB(rgb)
         })
-    }
-
-    // Fonction random
-    static random(): Color {
-        return new Color({
-            red: Math.round(Math.random() * 255),
-            green: Math.round(Math.random() * 255),
-            blue: Math.round(Math.random() * 255)
-        })
-    }
-
-    // Fonction inverse
-    public inverse(): Color {
-        return new Color({
-            red: 255 - (this.rgb as RGB).red,
-            green: 255 - (this.rgb as RGB).green,
-            blue: 255 - (this.rgb as RGB).blue
-        })
-    }
-
-    // Fonction closest
-    public closest(list: HtmlColorListEnum = HtmlColorListEnum.ALL): ClosestColorType {
-        const calculateAccurate = (rgb1: RGBType, rgb2: RGBType): number => {
-            const rDiff = rgb1.red - rgb2.red
-            const gDiff = rgb1.green - rgb2.green
-            const bDiff = rgb1.blue - rgb2.blue
-            return 1 - Math.sqrt((rDiff * rDiff + gDiff * gDiff + bDiff * bDiff) / (255 * 255 * 3))
-        }
-        const rgb = this.rgb.getModel() as RGBType
-        let closestColorName = ''
-        let closestColorHex = ''
-        let closestColorAccurate = 0
-        const HtmlColorsList = list == HtmlColorListEnum.ALL ? Color.allHtmlColors : Color.standardHtmlColors
-        for (const [colorName, colorHex] of Object.entries(HtmlColorsList)) {
-            const colorRGB = Color.hexToRGB(colorHex)
-            const accurate = calculateAccurate(rgb, colorRGB)
-            if (accurate > closestColorAccurate) {
-                closestColorName = colorName
-                closestColorHex = colorHex
-                closestColorAccurate = accurate
-            }
-        }
-        return {
-            name: closestColorName,
-            hex: closestColorHex,
-            accurate: closestColorAccurate,
-        }
-    }
-
-    // Fonction rgbToHex
-    static rgbToHex(rgb: RGBType): string {
-        // Bornes
-        const minValue = 0
-        const maxValue = 255
-
-        // Vérification des valeurs
-        if (!rgb.red.isBetween(minValue, maxValue))
-            throw new MemoLaboError(`Valeur du rouge invalide : ${rgb.red}.`)
-        if (!rgb.green.isBetween(minValue, maxValue))
-            throw new MemoLaboError(`Valeur du vert invalide : ${rgb.green}.`)
-        if (!rgb.blue.isBetween(minValue, maxValue))
-            throw new MemoLaboError(`Valeur du bleu invalide : ${rgb.blue}.`)
-
-        // Code hexadécimal
-        let hexaR = Math.round(rgb.red).toString(16).padStart(2, '0')
-        let hexaG = Math.round(rgb.green).toString(16).padStart(2, '0')
-        let hexaB = Math.round(rgb.blue).toString(16).padStart(2, '0')
-
-        // RGB en hexadécimal
-        return `#${hexaR}${hexaG}${hexaB}`
-        
-    }
-
-    // Fonction hexToRGB
-    static hexToRGB(hex: string): RGBType {
-        // Conversion en minuscule
-        hex = hex.toLowerCase()
-
-        // Rajout du # en début s'il est absent
-        hex = hex.charAt(0) === '#' ? hex : `#${hex}`
-        
-        // Si le code couleur est valide
-        if (hex.match(/^#([0-9a-f]{6})$/i)) {
-            // Création de la couleur
-            return {
-                red: parseInt(hex.substring(1, 3), 16),
-                green: parseInt(hex.substring(3, 5), 16),
-                blue: parseInt(hex.substring(5, 7), 16)
-            }
-        } else {
-            // Sinon erreur
-            throw new MemoLaboError(`Code hexadécimal invalide : ${hex}.`)
-        }
-        
     }
 
     // Getter générique
-    public get(name: string): BaseColorModel {
-        const colorModel = this.models.get(name.toLowerCase())
+    public get(name: string): IColorModel {
+        // Récupération du modèle
+        const colorModel = this._models.get(name.toLowerCase())
+        // S'il n'existe pas : erreur
         if (colorModel === undefined) {
             throw new MemoLaboError(`Le modèle de couleur ${name} n'existe pas.`)
         }
+        // Résultat
         return colorModel
     }
 
     // Setter générique
-    public set(name: string, colorModel: BaseColorModel): void {
+    public set(name: string, colorModel: IColorModel): void {
+        // Nom du modèle en minuscule
         const colorModelName = name.toLowerCase()
-        if (this.models.has(name)) {
-            this.models.set(name, colorModel)
+        // Si le modèle existe dans le dictionnaire
+        if (this._models.has(name)) {
+            // Mise à jour du modèle
+            this._models.set(name, colorModel)
+            // Conversion en RGB pour mettre à jour les autres modèles
+            const rgb = colorModel.toRGB()
+            // Parcours de tous les constructeurs
             Color.colorModelConstructors.forEach(Constructor => {
+                // Récupération du nom du modèle correspondant en minuscule
                 const constructorName = Constructor.name.toLowerCase()
+                // Si ce n'est pas le modèle mise à jour précedemment
                 if (constructorName !== colorModelName) {
-                    this.models.get(constructorName)?.setFromRGB(this.rgb.getModel() as RGBType)
+                    // Mise à jour du modèle avec le RGB calculé depuis le modèle de référence
+                    this._models.get(constructorName)?.setFromRGB(rgb)
                 }
             })
         } else {
+            // Si le modèle n'existe pas : erreur
             throw new MemoLaboError(`Le modèle de couleur ${name} n'existe pas.`)
         }
     }
 
-    // Getters spécifiques
-    get rgb(): IColorModel    { return this.get('rgb') }
-    get cielab(): IColorModel { return this.get('cielab') }
-    get hsl(): IColorModel    { return this.get('hsl') }
-    get hsv(): IColorModel    { return this.get('hsv') }
-    get ymck(): IColorModel   { return this.get('ymck') }
-
-    // Setters spécifiques
-    set rgb(rgb: RGB)          { this.set('rgb', rgb) }
-    set cielab(cielab: CIELAB) { this.set('cielab', cielab) }
-    set hsl(hsl: HSL)          { this.set('hsl', hsl) }
-    set hsv(hsv: HSV)          { this.set('hsv', hsv) }
-    set ymck(ymck: YMCK)       { this.set('ymck', ymck) }
+    // Get models
+    public get models(): MapIterator<IColorModel> {
+        return this._models.values()
+    }
 
 }
 
-export { Color, type ClosestColorType, HtmlColorListEnum }
+export { Color }

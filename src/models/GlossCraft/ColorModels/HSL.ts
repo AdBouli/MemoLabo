@@ -68,11 +68,10 @@ class HSL extends BaseColorModel {
         const sat = this.saturation / 100
         const lig = this.lightness / 100
 
-        // Initialiser les valeurs RVB
+        // Initialiser les valeurs RGB
         let red = 0
         let green = 0
         let blue = 0
-
         if (sat !== 0) {
             const hueToRGB = (p: number, q: number, t: number) => {
                 if (t < 0) t += 1
@@ -81,7 +80,7 @@ class HSL extends BaseColorModel {
                 if (t < 1 / 2) return q
                 if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6
                 return p
-            };
+            }
 
             const q = lig < 0.5 ? lig * (1 + sat) : lig + sat - lig * sat
             const p = 2 * lig - q
@@ -90,7 +89,7 @@ class HSL extends BaseColorModel {
             blue = hueToRGB(p, q, hue - 1 / 3)
         }
 
-        // Conversion vers RVB
+        // Conversion vers RGB
         return {
             red: red * 255,
             green: green * 255,

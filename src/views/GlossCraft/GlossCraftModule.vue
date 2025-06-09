@@ -9,29 +9,32 @@
     <!-- Contenu -->
     <div class="row mt-2">
         <div class="col-8">
-            <!-- Formulaire de sélection de couleur -->
-            <ColorGenForm :color-model="color"
-                @update="updateFromHex($event)"
-                @random="randomColor()"/>
+
+            <div class="Section">
+                <!-- Formulaire de sélection de couleur -->
+                <ColorGenForm :color="(color as Color)"
+                    @update="updateFromHexColor($event)"
+                    @random="randomColor()"/>
+
+                <!-- Information sur la couleur HTML la plus proche -->
+                <ClosestColor :color="(color as Color)" />
+
+            </div>
 
             <!-- Palettes de couleurs -->
-            <ColorPalet v-for="(palet, index) in palets" :key="index"
-                :palet="(palet as Color[])" @update:color="updateColor($event)" />
+            <div class="mt-4 vstack gap-3">
+                <div class="Section" v-for="(palet, index) in palets" :key="index">
+                    <ColorPaletForm :palet="(palet as ColorPalet)" @update="updateColor($event)" />
+                </div>
+            </div>
+
         </div>
 
         <!-- Modèles de couleurs -->
         <div class="col-4">
             <div class="vstack gap-3">
-                <ColorModelForm id="color_rgb_form"
-                    :color-model="color.rgb" @update="updateFromColorModel(color.rgb)" />
-                <ColorModelForm id="color_hsl_form"
-                    :color-model="color.hsl" @update="updateFromColorModel(color.hsl)" />
-                <ColorModelForm id="color_cielab_form"
-                    :color-model="color.cielab" @update="updateFromColorModel(color.cielab)" />
-                <ColorModelForm id="color_ymck_form"
-                    :color-model="color.ymck" @update="updateFromColorModel(color.ymck)" />
-                <ColorModelForm id="color_hsv_form"
-                    :color-model="color.hsv" @update="updateFromColorModel(color.hsv)" />
+                <ColorModelForm v-for="(model, index) in color.models" :key="index"
+                    :color-model="model" @update="updateFromColorModel(model)" />
             </div>            
         </div>
     </div>
@@ -43,36 +46,38 @@
 import { onMounted, ref } from 'vue';
 import type { IColorModel } from '@/models/GlossCraft/ColorModels/Base';
 import { Color } from '@/models/GlossCraft/Color';
+import { HexColor } from '@/models/GlossCraft/HexColor';
+import { ColorUtils } from '@/models/GlossCraft/ColorUtils';
+import { ColorPalet } from '@/models/GlossCraft/ColorPalet';
 import ColorGenForm from '@/views/GlossCraft/Forms/ColorGenForm.vue';
+import ClosestColor from '@/views/GlossCraft/ClosestColor.vue';
 import ColorModelForm from '@/views/GlossCraft/Forms/ColorModelForm.vue';
-import ColorPalet from '@/views/GlossCraft/ColorPalet.vue';
+import ColorPaletForm from '@/views/GlossCraft/Forms/ColorPaletForm.vue';
 
-const color = ref<Color>(new Color('#230595'))
-const palets = ref<Array<Array<Color>>>([[]])
+const color = ref<Color>(new Color(new HexColor('#230595')))
+const palets = ref<ColorPalet[]>([])
 
 const randomColor = () => {
-    color.value = Color.random()
+    color.value = ColorUtils.random()
 }
 
-const updateColor = (newColor: Color) => {
-    color.value = newColor
+const updateColor = (hexColor: HexColor) => {
+    color.value = new Color(hexColor)
 }
 
-const updateFromHex = (hex: string) => {
+const updateFromHexColor = (hex: HexColor) => {
     color.value = new Color(hex)
 }
 
 const updateFromColorModel = (colorModel: IColorModel) => {
+    console.log(colorModel)
     color.value = new Color(colorModel.toRGB())
 }
 
 onMounted(() => {
     randomColor()
     palets.value = [
-        [Color.random(), Color.random(), Color.random(), Color.random()],
-        [Color.random(), Color.random(), Color.random()],
-        [Color.random(), Color.random(), Color.random(), Color.random(), Color.random(), Color.random()],
-        [Color.random(), Color.random(), Color.random(), Color.random(), Color.random(), Color.random(), Color.random(), Color.random(), Color.random(), Color.random(), Color.random(), Color.random(), Color.random(), Color.random(), Color.random()],
+        ColorPalet.generateComplementaryPalet(color.value as Color, 5)
     ]
 })
 

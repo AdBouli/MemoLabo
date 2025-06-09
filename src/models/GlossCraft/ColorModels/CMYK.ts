@@ -1,9 +1,9 @@
 import { BaseColorModel, ColorModelComponent } from "@/models/GlossCraft/ColorModels/Base";
 import type { RGBType } from "@/models/GlossCraft/ColorModels/RGB"
 
-type YMCKType =  {yellow: number, magenta: number, cyan: number, black: number}
+type CMYKType =  { yellow: number, magenta: number, cyan: number, black: number }
 
-class YMCK extends BaseColorModel {
+class CMYK extends BaseColorModel {
 
     // Constructeur
     constructor(
@@ -12,10 +12,10 @@ class YMCK extends BaseColorModel {
         cyan: number = 0,
         black: number = 0,
     ) {
-        super('YMCK', [
-            new ColorModelComponent('yellow',  yellow,  { label: 'Jaune',   code: 'Y', min: 0, max: 100, step: 1 }),
-            new ColorModelComponent('magenta', magenta, { label: 'Magenta', code: 'M', min: 0, max: 100, step: 1 }),
+        super('CMYK', [
             new ColorModelComponent('cyan',    cyan,    { label: 'Cyan',    code: 'C', min: 0, max: 100, step: 1 }),
+            new ColorModelComponent('magenta', magenta, { label: 'Magenta', code: 'M', min: 0, max: 100, step: 1 }),
+            new ColorModelComponent('yellow',  yellow,  { label: 'Jaune',   code: 'Y', min: 0, max: 100, step: 1 }),
             new ColorModelComponent('black',   black,   { label: 'Noir',    code: 'K', min: 0, max: 100, step: 1 }),
         ])
     }
@@ -42,7 +42,7 @@ class YMCK extends BaseColorModel {
             y = 0;
         }
 
-        // Set the YMCK values
+        // Set the CMYK values
         this.yellow = y * 100
         this.magenta = m * 100
         this.cyan = c * 100
@@ -51,7 +51,7 @@ class YMCK extends BaseColorModel {
 
     // Fonction toRGB
     toRGB(): RGBType {
-        // Ensure YMCK values are within the valid range [0, 1]
+        // Ensure CMYK values are within the valid range [0, 1]
         const normY = this.yellow/100;
         const normM = this.magenta/100;
         const normC = this.cyan/100;
@@ -79,4 +79,4 @@ class YMCK extends BaseColorModel {
     
 }
 
-export { type YMCKType, YMCK }
+export { type CMYKType, CMYK }

@@ -1,5 +1,5 @@
 <template>
-    <div class="shadow rounded p-2">
+    <div class="Section">
         <div class="row align-items-center">
             <div class="col-auto">
                 <h4>{{ colorModel.getName() }}</h4>
@@ -16,9 +16,9 @@
         </div>
         <div class="collapse show" :id="collapseId">
             <RangeNumberInput v-for="(component, index) in colorModel.getComponents()" :key="index" :size="'sm'"
-                class="mt-1" :label="component.label" :id="`color_${colorModel.getName}_${component.name}_input`"
+                class="mt-1" :label="component.label" 
                 :min="component.minValue" :max="component.maxValue" :step="component.valuePrecision" 
-                :model-value="component.value" @update:model-value="component.value = $event; handleInput()" />
+                :model-value="component.value" @update="component.value = $event; handleInput()" />
         </div>
     </div>
 </template>

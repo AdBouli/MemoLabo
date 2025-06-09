@@ -33,7 +33,7 @@ class ColorModelComponent {
         }
         this.name = name.trim().toLowerCase()
         // LABEL
-        this.label = options?.label?.isEmptyOrSpaces() ? options?.label?.trim() : this.name.ucFirst()
+        this.label = options?.label?.isEmptyOrSpaces() ? this.name.ucFirst() : options?.label?.trim() ?? this.name.ucFirst()
         // CODE
         this.code = options?.code?.length == 1 ? options?.code : this.label.charAt(0)
         // MIN VALUE
@@ -50,7 +50,7 @@ class ColorModelComponent {
             throw new MemoLaboError("La valeur de précision doit être supérieure à 0.")
         }
         if (this.valuePrecision > this.maxValue - this.minValue) {
-            throw new MemoLaboError("La valeur de précision ne peut pas être supérieure à la différence entre la valeur maximale et minimale.")
+            throw new MemoLaboError("La valeur de précision ne peut pas être supérieure à la différence entre la valeur minimale et maximale.")
         }
         // VALUE
         this.value = value

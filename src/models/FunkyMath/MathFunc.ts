@@ -1,6 +1,6 @@
 import { all, create, type EvalFunction } from 'mathjs'
 
-export class MathFunc {
+class MathFunc {
 
     // Math.js
     private static math = create(all, {})
@@ -81,3 +81,5 @@ export class MathFunc {
     }
 
 }
+
+export { MathFunc }

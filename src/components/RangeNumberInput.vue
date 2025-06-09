@@ -55,11 +55,11 @@ const props = defineProps({
 })
 
 const emit = defineEmits<{
-    'update:modelValue': [value: number]
+    'update': [value: number]
 }>()
 
 const handleInput = (event: Event) => {
-    emit('update:modelValue', (event.target as HTMLInputElement).valueAsNumber)
+    emit('update', (event.target as HTMLInputElement).valueAsNumber)
 }
 
 const WHEEL_SPEED_FACTOR = 5

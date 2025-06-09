@@ -9,7 +9,7 @@ interface IColorModel {
     getName(): string
     getComponentNames(): string[]
     getModel(): ColorModelType
-    getComponents(): Array<ColorModelComponent>
+    getComponents(): ColorModelComponent[]
     getComponent(name: string): ColorModelComponent
     toString(): string
 }

@@ -58,3 +58,15 @@ $input-btn-font-family: $font-family-code;
 // @import "../../node_modules/bootstrap/scss/utilities/api";
 
 // 8. Add additional custom code here
+div.Section {
+    @extend .shadow;
+    @extend .rounded;
+    @extend .p-2;
+    @extend .bg-body-secondary;
+}
+
+div.SubSection {
+    @extend .rounded;
+    @extend .p-2;
+    @extend .bg-body-tertiary;
+}
